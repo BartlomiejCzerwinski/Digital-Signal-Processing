@@ -13,6 +13,22 @@ class Generator:
         self.p = p
         self.f = f
 
+    def generate_plot(self, fct, is_scatter = False):
+        num_of_samples = int(self.d * self.f)
+
+        times = [t / self.f for t in range(num_of_samples)]
+        values = [fct(t) for t in times]
+
+        if is_scatter:
+            plt.scatter(times, values)
+        else:
+            plt.plot(times, values)
+        plt.xlabel('Time (s)')
+        plt.ylabel('Value')
+        plt.title('Title')
+        plt.grid(True)
+        plt.show()
+
     # (S1) szum o rozkładzie jednostajnym;
     def uniformDistribution(self, time):
         return (random() * 2 * self.A) - self.A
