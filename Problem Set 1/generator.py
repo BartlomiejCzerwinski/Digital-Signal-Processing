@@ -4,14 +4,14 @@ from random import random
 class Generator:
 
     def __init__(self, A, t1, d, T, kw, ts, p, f):
-        self.A = A      # Amplituda
-        self.t1 = t1     # Czas początkowy
-        self.d = d      # Czas trwania sygnału
-        self.T = T      # Okres podstawowy
-        self.kw = kw     # Współczynnik wypełnienia
-        self.ts = ts
-        self.p = p
-        self.f = f
+        self.A = A          # Amplituda
+        self.t1 = t1        # Czas początkowy
+        self.d = d          # Czas trwania sygnału
+        self.T = T          # Okres podstawowy
+        self.kw = kw        # Współczynnik wypełnienia
+        self.ts = ts        # Skok czasowy
+        self.p = p          # Prawdopodobieństwo wystąpienia wartości A (szum impulsowy)
+        self.f = f          # Częstotliwość próbkowania
 
     def generate_plot(self, fct, is_scatter = False):
         num_of_samples = int(self.d * self.f)
