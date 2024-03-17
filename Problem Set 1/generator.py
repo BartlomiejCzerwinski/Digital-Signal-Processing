@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from random import random
 class Generator:
 
-    def __init__(self, A, t1, d, T, kw, ts, p, f):
+    def __init__(self, A, t1, d, T, kw, ts, p, f, function):
         self.A = A          # Amplituda
         self.t1 = t1        # Czas początkowy
         self.d = d          # Czas trwania sygnału
@@ -12,13 +12,15 @@ class Generator:
         self.ts = ts        # Skok czasowy
         self.p = p          # Prawdopodobieństwo wystąpienia wartości A (szum impulsowy)
         self.f = f          # Częstotliwość próbkowania
+        self.function = function
 
-    def generate_plot(self, fct, is_scatter = False):
+    def generate_plot(self, is_scatter = False):
         num_of_samples = int(self.d * self.f)
 
         times = [t / self.f for t in range(num_of_samples)]
-        values = [fct(t) for t in times]
+        values = [self.function(self, t) for t in times]
 
+        plt.figure(figsize=(8, 4))
         if is_scatter:
             plt.scatter(times, values)
         else:
