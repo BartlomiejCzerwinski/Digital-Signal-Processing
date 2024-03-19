@@ -1,0 +1,85 @@
+{% extends "signal_and_noise_generation/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<ul class="nav nav-pills justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link" href="{%url 'index'%}">Main Page</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page">Add</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" >Predict</a>
+    </li>
+</ul>
+
+<form id="drawPlotForm" method="post">
+    {% csrf_token %}
+    <div class="row mb-3 row-input">
+        <h2>Rysuj wykres</h2>
+    </div>
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.function }}
+        </div>
+    </div>
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.amplitude }}
+            <span class="input-group-text"></span>
+            <span class="input-group-text">0.00</span>
+        </div>
+        <div class="input-group addFormInput">
+            {{ form.start_time }}
+            <span class="input-group-text">s</span>
+            <span class="input-group-text">0.00</span>
+        </div>
+    </div>
+    <p> </p>
+
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.duration }}
+            <span class="input-group-text">s</span>
+            <span class="input-group-text">0.00</span>
+        </div>
+        <div class="input-group addFormInput">
+            {{ form.T }}
+            <span class="input-group-text">s</span>
+            <span class="input-group-text">0.00</span>
+        </div>
+    </div>
+
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.kw }}
+            <span class="input-group-text">cm</span>
+            <span class="input-group-text">0.00</span>
+        </div>
+        <div class="input-group addFormInput">
+            {{ form.jump_time }}
+            <span class="input-group-text">s</span>
+            <span class="input-group-text">0.00</span>
+        </div>
+    </div>
+
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.p }}
+            <span class="input-group-text">0.00</span>
+        </div>
+        <div class="input-group addFormInput">
+            {{ form.f }}
+            <span class="input-group-text">Hz</span>
+            <span class="input-group-text">0.00</span>
+        </div>
+    </div>
+
+    <div class="row mb-3 row-input">
+        <button type="submit" class="btn btn-primary">Rysuj wykres</button>
+    </div>
+
+</form>
+{% endblock %}
