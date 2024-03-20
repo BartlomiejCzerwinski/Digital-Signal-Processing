@@ -30,8 +30,11 @@ def draw_plot(request):
         jump_time = float(request.POST['jump_time'])
         p = float(request.POST['p'])
         f = int(request.POST['f'])
+        bins_num = int(request.POST['bins_num'])
+        bins_num *= 5
+        print("bins: ", bins_num)
         g = generator.Generator(amplitude, start_time, duration, T, kw,
-                                jump_time, p, f, fct)
+                                jump_time, p, f, fct, bins_num)
         plot = g.generate_plot()
 
         return render(request, "signal_and_noise_generation/plot.html",
