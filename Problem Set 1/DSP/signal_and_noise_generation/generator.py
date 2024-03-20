@@ -3,9 +3,8 @@ import math
 import matplotlib.pyplot as plt
 from random import random
 from io import BytesIO
-import numpy as np
 from scipy.integrate import quad
-from functools import partial
+
 class Generator:
 
     def __init__(self, A, t1, d, T, kw, ts, p, f, function_name, bins_num):
@@ -23,6 +22,7 @@ class Generator:
             self.is_scatter = True
         else:
             self.is_scatter = False
+
 
     def calculate_mean_value(self, t1, t2):
         fct = lambda x: self.function(self, x)
@@ -51,7 +51,6 @@ class Generator:
 
     def calculate_effective_value(self, t1, t2):
         return math.sqrt(self.calculate_mean_power(t1, t2))
-
 
     def generate_plot(self):
         num_of_samples = int(self.d * self.f)
