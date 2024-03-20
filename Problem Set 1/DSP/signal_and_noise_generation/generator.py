@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from random import random
 class Generator:
 
-    def __init__(self, A, t1, d, T, kw, ts, p, f, function):
+    def __init__(self, A, t1, d, T, kw, ts, p, f, function_name):
         self.A = A          # Amplituda
         self.t1 = t1        # Czas początkowy
         self.d = d          # Czas trwania sygnału
@@ -12,7 +12,7 @@ class Generator:
         self.ts = ts        # Skok czasowy
         self.p = p          # Prawdopodobieństwo wystąpienia wartości A (szum impulsowy)
         self.f = f          # Częstotliwość próbkowania
-        self.function = function
+        self.function = self.setFunctionByName(function_name)
 
     def generate_plot(self, is_scatter = False):
         num_of_samples = int(self.d * self.f)
@@ -102,3 +102,27 @@ class Generator:
         if self.p > random_double:
             return self.A
         return 0
+
+    def setFunctionByName(self, function_name):
+        if function_name == 'uniform_distribution':
+            return Generator.uniform_distribution
+        elif function_name == 'gaussian_noise':
+            return Generator.gaussian_noise
+        elif function_name == 'sinusoidal_signal':
+            return Generator.sinusoidal_signal
+        elif function_name == 'half_wave_rectifier_signal':
+            return Generator.half_wave_rectifier_signal
+        elif function_name == 'full_wave_rectifier_signal':
+            return Generator.full_wave_rectifier_signal
+        elif function_name == 'rectangular_signal':
+            return Generator.rectangular_signal
+        elif function_name == 'rectangular_symmetrical_signal':
+            return Generator.rectangular_symmetrical_signal
+        elif function_name == 'triangular_signal':
+            return Generator.triangular_signal
+        elif function_name == 'unit_step':
+            return Generator.unit_step
+        elif function_name == 'unit_impulse':
+            return Generator.unit_impulse
+        elif function_name == 'impulse_noise':
+            return Generator.impulse_noise
