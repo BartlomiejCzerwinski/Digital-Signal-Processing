@@ -16,20 +16,24 @@ class Generator:
         self.f = f          # Częstotliwość próbkowania
         self.function = self.setFunctionByName(function_name)
         self.bins_num = bins_num
+        if function_name == 'unit_impulse' or function_name == 'impulse_noise':
+            self.is_scatter = True
+        else:
+            self.is_scatter = False
 
-    def generate_plot(self, is_scatter=False):
+    def generate_plot(self):
         num_of_samples = int(self.d * self.f)
 
         times = [(t / self.f) for t in range(num_of_samples)]
         times_for_plot = [(t / self.f) + self.t1 for t in range(num_of_samples)]
         values = [self.function(self, t) for t in times]
-        print(self.sinusoidal_signal(0))
-        print(self.sinusoidal_signal(0.5))
+
 
         fig, axes = plt.subplots(2, 1, figsize=(8, 8))
 
-        if is_scatter:
-            axes[0].scatter(times, values)
+        print("Is scatter:", self.is_scatter)
+        if self.is_scatter:
+            axes[0].scatter(times_for_plot, values)
         else:
             axes[0].plot(times_for_plot, values)
         axes[0].set_xlabel('Time (s)')
