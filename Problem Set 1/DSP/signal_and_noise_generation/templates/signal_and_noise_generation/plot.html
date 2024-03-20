@@ -1,0 +1,20 @@
+{% extends "signal_and_noise_generation/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<ul class="nav nav-pills justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link" href="{%url 'index'%}">Main Page</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page">Add</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" >Predict</a>
+    </li>
+</ul>
+
+<img src="data:image/png;base64,{{ plot }}" alt="Plot">
+
+{% endblock %}

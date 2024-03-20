@@ -18,20 +18,31 @@ class Form_add(forms.Form):
     f = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Częstotliwosc próbkowania'}),
                                 label='', validators=[is_positive_validator])
     dropdown_choices = [
-        ('option1', 'Szum o rozkładzie jednostajnym'),
-        ('option2', 'Szum Gaussowski'),
-        ('option3', 'Sygnał sinusoidalny'),
-        ('option4', 'Sygnał sinusoidalny wyprostowany jednopołówkowo'),
-        ('option5', 'Sygnał sinusoidalny wyprostowany dwupołówkowo'),
-        ('option6', 'Sygnał prostokątny'),
-        ('option7', 'Sygnał prostokątny symetryczny'),
-        ('option8', 'Sygnał trójkątny'),
-        ('option9', 'Skok jednostkowy'),
-        ('option10', 'Impuls jednostkowy'),
-        ('option11', 'Szum impulsowy'),
+        ('uniform_distribution', 'Szum o rozkładzie jednostajnym'),
+        ('gaussian_noise', 'Szum Gaussowski'),
+        ('sinusoidal_signal', 'Sygnał sinusoidalny'),
+        ('half_wave_rectifier_signal', 'Sygnał sinusoidalny wyprostowany jednopołówkowo'),
+        ('full_wave_rectifier_signal', 'Sygnał sinusoidalny wyprostowany dwupołówkowo'),
+        ('rectangular_signal', 'Sygnał prostokątny'),
+        ('rectangular_symmetrical_signal', 'Sygnał prostokątny symetryczny'),
+        ('triangular_signal', 'Sygnał trójkątny'),
+        ('unit_step', 'Skok jednostkowy'),
+        ('unit_impulse', 'Impuls jednostkowy'),
+        ('impulse_noise', 'Szum impulsowy'),
 
     ]
     function = forms.ChoiceField(choices=dropdown_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+    BINS_CHOICES = [
+        (1, '5'),
+        (2, '10'),
+        (3, '15'),
+        (4, '20'),
+    ]
+    bins_num = forms.ChoiceField(
+        label="bins num",
+        choices=BINS_CHOICES,
+        widget=forms.RadioSelect()
+    )
 class Form_predict(forms.Form):
     sepal_length = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'sepal length'}), label='', validators=[is_positive_validator])
     sepal_width = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'sepal width'}), label='', validators=[is_positive_validator])

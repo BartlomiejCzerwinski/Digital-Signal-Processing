@@ -1,9 +1,11 @@
+import base64
 import math
 import matplotlib.pyplot as plt
 from random import random
+from io import BytesIO
 class Generator:
 
-    def __init__(self, A, t1, d, T, kw, ts, p, f, function_name):
+    def __init__(self, A, t1, d, T, kw, ts, p, f, function_name, bins_num):
         self.A = A          # Amplituda
         self.t1 = t1        # Czas początkowy
         self.d = d          # Czas trwania sygnału
@@ -13,23 +15,42 @@ class Generator:
         self.p = p          # Prawdopodobieństwo wystąpienia wartości A (szum impulsowy)
         self.f = f          # Częstotliwość próbkowania
         self.function = self.setFunctionByName(function_name)
+        self.bins_num = bins_num
 
-    def generate_plot(self, is_scatter = False):
+    def generate_plot(self, is_scatter=False):
         num_of_samples = int(self.d * self.f)
 
-        times = [t / self.f for t in range(num_of_samples)]
+        times = [(t / self.f) for t in range(num_of_samples)]
+        times_for_plot = [(t / self.f) + self.t1 for t in range(num_of_samples)]
         values = [self.function(self, t) for t in times]
+        print(self.sinusoidal_signal(0))
+        print(self.sinusoidal_signal(0.5))
 
-        plt.figure(figsize=(8, 4))
+        fig, axes = plt.subplots(2, 1, figsize=(8, 8))
+
         if is_scatter:
-            plt.scatter(times, values)
+            axes[0].scatter(times, values)
         else:
-            plt.plot(times, values)
-        plt.xlabel('Time (s)')
-        plt.ylabel('Value')
-        plt.title('Title')
-        plt.grid(True)
-        plt.show()
+            axes[0].plot(times_for_plot, values)
+        axes[0].set_xlabel('Time (s)')
+        axes[0].set_ylabel('Value')
+        axes[0].set_title('Title')
+        axes[0].grid(True)
+
+        axes[1].hist(values, bins=self.bins_num, edgecolor="black")  # Możesz dostosować liczbę kubełków (bins) według potrzeb
+        axes[1].set_xlabel('Value')
+        axes[1].set_ylabel('Frequency')
+        axes[1].set_title('Histogram of Values')
+        axes[1].grid(True)
+
+        plt.tight_layout()
+
+        image_stream = BytesIO()
+        plt.savefig(image_stream, format='png')
+        image_stream.seek(0)
+        image_base64 = base64.b64encode(image_stream.read()).decode('utf-8')
+
+        return image_base64
 
     # (S1) szum o rozkładzie jednostajnym;
     def uniform_distribution(self, time):
