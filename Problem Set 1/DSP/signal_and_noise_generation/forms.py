@@ -33,10 +33,10 @@ class Form_add(forms.Form):
     ]
     function = forms.ChoiceField(choices=dropdown_choices, widget=forms.Select(attrs={'class': 'form-control'}))
     BINS_CHOICES = [
-        (1, '5'),
-        (2, '10'),
-        (3, '15'),
-        (4, '20'),
+        (5, '5'),
+        (10, '10'),
+        (15, '15'),
+        (20, '20'),
     ]
     bins_num = forms.ChoiceField(
         label="bins num",
