@@ -3,6 +3,9 @@ import math
 import matplotlib.pyplot as plt
 from random import random
 from io import BytesIO
+import numpy as np
+from scipy.integrate import quad
+from functools import partial
 class Generator:
 
     def __init__(self, A, t1, d, T, kw, ts, p, f, function_name, bins_num):
@@ -21,13 +24,40 @@ class Generator:
         else:
             self.is_scatter = False
 
+    def calculate_mean_value(self, t1, t2):
+        fct = lambda x: self.function(self, x)
+        integral, _ = quad(fct, t1, t2)
+        integral = (1/(t2-t1))*integral
+        return integral
+
+    def calculate_mean_abs_value(self, t1, t2):
+        fct = lambda x: abs(self.function(self, x))
+        integral, _ = quad(fct, t1, t2)
+        integral = (1/(t2-t1))*integral
+        return integral
+
+    def calculate_mean_power(self, t1, t2):
+        fct = lambda x: self.function(self, x) ** 2
+        integral, _ = quad(fct, t1, t2)
+        integral = (1/(t2-t1))*integral
+        return integral
+
+    def calculate_variance(self, t1, t2):
+        mean_value = self.calculate_mean_value(t1, t2)
+        fct = lambda x: (self.function(self, x) - mean_value) ** 2
+        integral, _ = quad(fct, t1, t2)
+        integral = (1 / (t2 - t1)) * integral
+        return integral
+
+    def calculate_effective_value(self, t1, t2):
+        return math.sqrt(self.calculate_mean_power(t1, t2))
+
+
     def generate_plot(self):
         num_of_samples = int(self.d * self.f)
-
         times = [(t / self.f) for t in range(num_of_samples)]
         times_for_plot = [(t / self.f) + self.t1 for t in range(num_of_samples)]
         values = [self.function(self, t) for t in times]
-
 
         fig, axes = plt.subplots(2, 1, figsize=(8, 8))
 
