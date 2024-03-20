@@ -32,11 +32,11 @@ class Generator:
         plt.show()
 
     # (S1) szum o rozkładzie jednostajnym;
-    def uniformDistribution(self, time):
+    def uniform_distribution(self, time):
         return (random() * 2 * self.A) - self.A
 
     #(S2) szum gaussowski;
-    def gaussianNoise(self, time):
+    def gaussian_noise(self, time):
         std_dev = self.A / 3
         u1 = 1.0 - random()
         u2 = 1.0 - random()
@@ -45,41 +45,41 @@ class Generator:
         return normal * std_dev
 
     #(S3) sygnał sinusoidalny;
-    def sinusoidalSignal(self, time):
+    def sinusoidal_signal(self, time):
         return self.A * math.sin((2 * math.pi / self.T) * (time - self.t1))
 
     #(S4) sygnał sinusoidalny wyprostowany jednopołówkowo;
-    def halfWaveRectifierSignal(self, time):
+    def half_wave_rectifier_signal(self, time):
         return 0.5 * self.A * (math.sin((2 * math.pi / self.T) * (time - self.t1)) + math.fabs(math.sin((2 * math.pi / self.T) * (time - self.t1))))
 
 
     #(S5) sygnał sinusoidalny wyprostowany dwupołówkowo;
-    def fullWaveRectifierSignal(self, time):
+    def full_wave_rectifier_signal(self, time):
         return self.A * math.fabs(math.sin((2 * math.pi / self.T) * (time - self.t1)))
 
     #(S6) sygnał prostokątny;
-    def rectangularSignal(self, time):
+    def rectangular_signal(self, time):
         k = int((time / self.T) - (self.t1 / self.T))
         if time >= (k * self.T + self.t1) and time < (self.kw * self.T + k * self.T + self.t1):
             return self.A
         return 0
 
     #(S7) sygnał prostokątny symetryczny;
-    def rectangularSymmetricalSignal(self, time):
+    def rectangular_symmetrical_signal(self, time):
         k = int((time / self.T) - (self.t1 / self.T))
         if time >= k * self.T + self.t1 and time < self.kw * self.T + k * self.T + self.t1:
             return self.A
         return -self.A
 
     #(S8) sygnał trójkątny;
-    def triangularSignal(self, time):
+    def triangular_signal(self, time):
         k = int((time / self.T) - (self.t1 / self.T))
         if time >= k * self.T + self.t1 and time < self.kw * self.T + k * self.T + self.t1:
             return (self.A / (self.kw * self.T)) * (time - k * self.T - self.t1)
         return -self.A / (self.T * (1 - self.kw)) * (time - k * self.T - self.t1) + (self.A / (1 - self.kw))
 
     #(S9) skok jednostkowy;
-    def unitStep(self, time):
+    def unit_step(self, time):
         if time > self.ts:
             return self.A
         elif time == self.ts:
@@ -88,7 +88,7 @@ class Generator:
             return 0
 
     #(S10) impuls jednostkowy;
-    def unitImpulse(self, time):
+    def unit_impulse(self, time):
         if time > self.ts:
             return self.A
         elif time == self.ts:
@@ -97,7 +97,7 @@ class Generator:
             return 0
 
     #(S11) szum impulsowy;
-    def impulseNoise(self, time):
+    def impulse_noise(self, time):
         random_double = random()
         if self.p > random_double:
             return self.A
