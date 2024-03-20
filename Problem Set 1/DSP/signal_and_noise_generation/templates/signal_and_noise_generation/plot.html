@@ -17,4 +17,14 @@
 
 <img src="data:image/png;base64,{{ plot }}" alt="Plot">
 
+<form id="drawPlotForm">
+    <h3> Parametry sygnału </h3>
+
+    <p>Wartość średnia sygnału: {{ mean_value }}</p>
+    <p>Wartość średnia bezwzględna sygnału: {{ mean_abs_value }}</p>
+    <p>Wartość skuteczna sygnału: {{ effective_value }}</p>
+    <p>Wariancja sygnału: {{ variance }}</p>
+    <p>Moc średnia sygnału: {{ mean_power }}</p>
+
+</form>
 {% endblock %}
