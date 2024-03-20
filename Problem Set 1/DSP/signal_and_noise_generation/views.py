@@ -37,7 +37,18 @@ def draw_plot(request):
                                 jump_time, p, f, fct, bins_num)
         plot = g.generate_plot()
 
+        mean_value = g.calculate_mean_value(g.t1, g.t1 + g.d)
+        mean_abs_value = g.calculate_mean_abs_value(g.t1, g.t1 + g.d)
+        effective_value = g.calculate_effective_value(g.t1, g.t1 + g.d)
+        variance = g.calculate_variance(g.t1, g.t1 + g.d)
+        mean_power = g.calculate_mean_power(g.t1, g.t1 + g.d)
+
         return render(request, "signal_and_noise_generation/plot.html",
-                      {'plot': plot})
+                      {'plot': plot,
+                       'mean_value': mean_value,
+                       'mean_abs_value': mean_abs_value,
+                       'effective_value': effective_value,
+                       'variance': variance,
+                       'mean_power': mean_power})
 
 
