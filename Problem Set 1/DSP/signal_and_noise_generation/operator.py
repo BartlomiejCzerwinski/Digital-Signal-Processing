@@ -37,15 +37,15 @@ class Operator:
         #    axes[0].scatter(times_for_plot, values)
         #else:
         axes[0].plot(times_for_plot, values)
-        axes[0].set_xlabel('Time (s)')
-        axes[0].set_ylabel('Value')
-        axes[0].set_title('Title')
+        axes[0].set_xlabel('Czas (s)')
+        axes[0].set_ylabel('Amplituda')
+        axes[0].set_title('')
         axes[0].grid(True)
 
         axes[1].hist(values, bins=10, edgecolor="black")  # Możesz dostosować liczbę kubełków (bins) według potrzeb
-        axes[1].set_xlabel('Value')
-        axes[1].set_ylabel('Frequency')
-        axes[1].set_title('Histogram of Values')
+        axes[1].set_xlabel('Wartości')
+        axes[1].set_ylabel('Częstość')
+        axes[1].set_title('')
         axes[1].grid(True)
 
         plt.tight_layout()

@@ -80,7 +80,6 @@ def draw_plot(request):
         p = float(request.POST['p'])
         f = int(request.POST['f'])
         bins_num = int(request.POST['bins_num'])
-        bins_num *= 5
         print("bins: ", bins_num)
         g = generator.Generator(amplitude, start_time, duration, T, kw,
                                 jump_time, p, f, fct, bins_num)
