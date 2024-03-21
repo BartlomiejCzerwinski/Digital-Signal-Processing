@@ -18,6 +18,7 @@ class Generator:
         self.f = f          # Częstotliwość próbkowania
         self.function = self.setFunctionByName(function_name)
         self.bins_num = bins_num
+        self.values = []
         if function_name == 'unit_impulse' or function_name == 'impulse_noise':
             self.is_scatter = True
         else:
@@ -57,6 +58,7 @@ class Generator:
         times = [(t / self.f) for t in range(num_of_samples)]
         times_for_plot = [(t / self.f) + self.t1 for t in range(num_of_samples)]
         values = [self.function(self, t) for t in times]
+        self.values = values
 
         fig, axes = plt.subplots(2, 1, figsize=(8, 8))
 
@@ -180,3 +182,6 @@ class Generator:
             return Generator.unit_impulse
         elif function_name == 'impulse_noise':
             return Generator.impulse_noise
+
+    def get_values(self):
+        return self.values

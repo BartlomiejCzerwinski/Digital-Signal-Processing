@@ -8,6 +8,7 @@ class Operator:
     def __init__(self, generator1, operation, generator2):
         self.generator1 = generator1
         self.generator2 = generator2
+        self.values = []
         if operation == "+":
             self.function = lambda t: self.generator1.function(self.generator1, t) \
                                       + self.generator2.function(self.generator2, t)
@@ -27,6 +28,7 @@ class Operator:
         times = [(t / self.generator1.f) for t in range(num_of_samples)]
         times_for_plot = [(t / self.generator1.f) + self.generator1.t1 for t in range(num_of_samples)]
         values = [self.function(t) for t in times]
+        self.values = values
 
         fig, axes = plt.subplots(2, 1, figsize=(8, 8))
 
@@ -82,3 +84,6 @@ class Operator:
 
     def calculate_effective_value(self, t1, t2):
         return math.sqrt(self.calculate_mean_power(t1, t2))
+
+    def get_values(self):
+        return self.values

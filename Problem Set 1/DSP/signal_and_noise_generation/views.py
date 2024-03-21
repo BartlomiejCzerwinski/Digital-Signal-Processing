@@ -1,8 +1,14 @@
-from django.http import HttpResponse
+import struct
+
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
 from . import forms
 from . import generator
 from . import operator
+
+SAVE_T1 = 0
+SAVE_F = 1
+SAVE_VALUES = []
 
 def index(request):
     form = forms.Form_add()
@@ -44,6 +50,11 @@ def calculate_operation(request):
         o = operator.Operator(g1, operation, g2)
         plot = o.generate_plot()
 
+        global SAVE_T1, SAVE_F, SAVE_VALUES
+        SAVE_T1 = g1.t1
+        SAVE_F = g1.f
+        SAVE_VALUES = o.get_values()
+
         mean_value = o.calculate_mean_value(g1.t1, g1.t1 + g1.d)
         mean_abs_value = o.calculate_mean_abs_value(g1.t1, g1.t1 + g1.d)
         effective_value = o.calculate_effective_value(g1.t1, g1.t1 + g1.d)
@@ -74,6 +85,11 @@ def draw_plot(request):
         g = generator.Generator(amplitude, start_time, duration, T, kw,
                                 jump_time, p, f, fct, bins_num)
         plot = g.generate_plot()
+        global SAVE_T1, SAVE_F, SAVE_VALUES
+        SAVE_T1 = start_time
+        SAVE_F = f
+        SAVE_VALUES = g.get_values()
+
 
         mean_value = g.calculate_mean_value(g.t1, g.t1 + g.d)
         mean_abs_value = g.calculate_mean_abs_value(g.t1, g.t1 + g.d)
@@ -88,5 +104,24 @@ def draw_plot(request):
                        'effective_value': effective_value,
                        'variance': variance,
                        'mean_power': mean_power})
+
+def save_plot(request):
+    global SAVE_T1, SAVE_F, SAVE_VALUES
+    print("T1:", SAVE_T1)
+    print("F:", SAVE_F)
+    print("save values:", SAVE_VALUES)
+    all_values = [SAVE_T1, SAVE_F] + SAVE_VALUES
+
+    data_format = 'dd' + 'd' * len(SAVE_VALUES)
+
+    binary_data = struct.pack(data_format, *all_values)
+
+    with open('dane.bin', 'wb') as f:
+        f.write(binary_data)
+
+    response = FileResponse(open('dane.bin', 'rb'))
+    response['Content-Disposition'] = 'attachment; filename="dane.bin"'
+
+    return response
 
 
