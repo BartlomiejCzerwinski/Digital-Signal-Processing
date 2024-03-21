@@ -124,4 +124,12 @@ def save_plot(request):
 
     return response
 
+def upload_plot(request):
+    form = forms.File_upload_form()
+    if request.method == "POST":
+        uploaded_file = request.FILES['file']
+
+    return render(request, "signal_and_noise_generation/upload.html",
+                  {'form': form})
+
 

@@ -119,3 +119,6 @@ class Form_operation(forms.Form):
         choices=BINS_CHOICES,
         widget=forms.RadioSelect()
     )
+
+class File_upload_form(forms.Form):
+    file = forms.FileField()
