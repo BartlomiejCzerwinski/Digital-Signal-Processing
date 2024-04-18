@@ -18,32 +18,13 @@
     <p>Wartość średnia bezwzględna sygnału: {{ mean_abs_value }}</p>
     <p>Wartość skuteczna sygnału: {{ effective_value }}</p>
     <p>Wariancja sygnału: {{ variance }}</p>
-    <p>Moc średnia sygnału: {{ mean_power }}</p>
+    <p></p>
+    <p>Błąd średniokwadratowy (MSE) {{ extra_params.MSE }}</p>
+    <p>Stosunek sygnał-szum (SNR): {{ extra_params.SNR }}</p>
+    <p>Szczytowy stosunek sygnał-szum (PSNR): {{ extra_params.PSNR }}</p>
+    <p>Maksymalna różnica (MD): {{ extra_params.MD }}</p>
+    <p>Efektywna liczba bitów (ENOB): {{ extra_params.ENOB }}</p>
 
 </form>
 
-<div class="row mb-3 row-input">
-        <button id="saveButton" type="submit" class="btn btn-primary">Zapisz wykres</button>
-</div>
-
-<script>
-    document.getElementById("saveButton").addEventListener("click", function() {
-        const serverUrl = '/save_plot';
-
-        fetch(serverUrl)
-            .then(response => response.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'dane.bin';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            })
-            .catch(error => {
-                alert('Wystąpił błąd podczas zapisywania wykresu!');
-            });
-    });
-</script>
 {% endblock %}

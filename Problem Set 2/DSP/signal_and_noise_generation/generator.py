@@ -3,11 +3,13 @@ import math
 import matplotlib.pyplot as plt
 from random import random
 from io import BytesIO
+import math
+import numpy as np
 from scipy.integrate import quad
 
 class Generator:
 
-    def __init__(self, A, t1, d, T, kw, ts, p, f, function_name, bins_num):
+    def __init__(self, A, t1, d, T, kw, ts, p, f, function_name):
         self.A = A          # Amplituda
         self.t1 = t1        # Czas początkowy
         self.d = d          # Czas trwania sygnału
@@ -17,7 +19,6 @@ class Generator:
         self.p = p          # Prawdopodobieństwo wystąpienia wartości A (szum impulsowy)
         self.f = f          # Częstotliwość próbkowania
         self.function = self.setFunctionByName(function_name)
-        self.bins_num = bins_num
         self.values = []
         if function_name == 'unit_impulse' or function_name == 'impulse_noise':
             self.is_scatter = True
@@ -53,39 +54,148 @@ class Generator:
     def calculate_effective_value(self, t1, t2):
         return math.sqrt(self.calculate_mean_power(t1, t2))
 
+    # Corrected sinc method
+    def sinc(self, x):
+        if x == 0:
+            return 1
+        else:
+            return np.sin(np.pi * x) / (np.pi * x)
+
+    def sinc_reconstruction(self, times, quantization_values):
+        reconstructed_signal = np.zeros(len(times))
+        T = 1 / 20  # Okres próbkowania
+        for i, t in enumerate(times):
+            for j, quant_time in enumerate(times):
+                reconstructed_signal[i] += quantization_values[j] * self.sinc((t - quant_time) / T)
+
+        print(len(reconstructed_signal))
+        return reconstructed_signal
+
+
+    def mean_sq_error(self, real_values, predicted_values):
+        err = 0
+        for i in range(len(real_values)):
+            err += (real_values[i] - predicted_values[i])**2
+        err /= len(real_values)
+        return err
+
+    def SNR(self, real_values, predicted_values):
+        real_sum = 0
+        for i in real_values:
+            real_sum += (i**2)
+        mean_sq_err = 0
+        for i in range(len(real_values)):
+            mean_sq_err += (real_values[i] - predicted_values[i]) ** 2
+        return 10*math.log10(real_sum/mean_sq_err)
+
+    def peak_SNR(self, real_values, predicted_values):
+        max_val = max(predicted_values)
+        result = max_val/self.mean_sq_error(real_values, predicted_values)
+        return 10*math.log10(result)
+
+    def max_difference(self, real_values, predicted_values):
+        max_dif = 0
+        for i in range(len(real_values)):
+            if abs(real_values[i] - predicted_values[i]) > max_dif:
+                max_dif = abs(real_values[i] - predicted_values[i])
+        return max_dif
+
+    def ENOB(self, real_values, predicted_values):
+        snr = self.SNR(real_values, predicted_values)
+        return (snr - 1.76)/6.02
+
+
     def generate_plot(self):
+        # Próbkowanie równomierne
         num_of_samples = int(self.d * self.f)
         times = [(t / self.f) for t in range(num_of_samples)]
         times_for_plot = [(t / self.f) + self.t1 for t in range(num_of_samples)]
         values = [self.function(self, t) for t in times]
-        self.values = values
 
-        fig, axes = plt.subplots(2, 1, figsize=(8, 8))
+        # Kwantyzacja równomierna z zaokrągleniem
+        quantization_frequency = 10  # Częstotliwość kwantyzacji (Hz)
+        quantization_step = int(self.f / quantization_frequency)
+        quantization_times = times_for_plot[::quantization_step]
+        quantization_values = [round(self.function(self, t), 1) for t in quantization_times]
 
-        print("Is scatter:", self.is_scatter)
-        if self.is_scatter:
-            axes[0].scatter(times_for_plot, values)
-        else:
-            axes[0].plot(times_for_plot, values)
+
+        fig, axes = plt.subplots(5, 1, figsize=(8, 16))
+
+        # Wykres przed kwantyzacją
+        axes[0].plot(times_for_plot, values)
         axes[0].set_xlabel('Czas (s)')
         axes[0].set_ylabel('Amplituda')
-        axes[0].set_title('')
+        axes[0].set_title('Sygnał przed kwantyzacją')
         axes[0].grid(True)
 
-        axes[1].hist(values, bins=self.bins_num, edgecolor="black")  # Możesz dostosować liczbę kubełków (bins) według potrzeb
-        axes[1].set_xlabel('Wartości')
-        axes[1].set_ylabel('Częstość')
-        axes[1].set_title('')
+        # Wykres próbek sygnału kwantyzacji
+        axes[1].scatter(quantization_times, quantization_values)
+        axes[1].set_xlabel('Czas (s)')
+        axes[1].set_ylabel('Amplituda')
+        axes[1].set_title('Próbki sygnału do kwantyzacji')
         axes[1].grid(True)
+
+        # Kwantyzacja równomierna z zaokrągleniem
+        axes[2].plot(quantization_times, quantization_values, drawstyle='steps-post')
+        axes[2].plot(times_for_plot, values)
+        axes[2].set_xlabel('Czas (s)')
+        axes[2].set_ylabel('Amplituda')
+        axes[2].set_title('Kwantyzacja równomierna z zaokrągleniem')
+        axes[2].grid(True)
+
+        # Wykres kwantyzacji
+        axes[3].plot(quantization_times, quantization_values, drawstyle='steps-post')
+        axes[3].set_xlabel('Czas (s)')
+        axes[3].set_ylabel('Amplituda')
+        axes[3].set_title('Ekstrapolacja zerowego rzędu')
+        axes[3].grid(True)
+        reconstructed_values = self.sinc_reconstruction(quantization_times, quantization_values)
+
+        # Wykres kwantyzacji
+        axes[4].plot(quantization_times, reconstructed_values)
+        axes[4].set_xlabel('Czas (s)')
+        axes[4].set_ylabel('Amplituda')
+        axes[4].set_title('Rekonstrukcja w oparciu o funkcję sinc')
+        axes[4].grid(True)
+        print(quantization_values)
+        print(reconstructed_values)
+        print("Blad sredniokwadratowy", self.mean_sq_error(quantization_values, reconstructed_values))
+        print("SNR: ", self.SNR(quantization_values, reconstructed_values))
+        print("PEAK SNR: ", self.peak_SNR(quantization_values, reconstructed_values))
+        print("Max dif: ", self.max_difference(quantization_values, reconstructed_values))
+        print("ENOB: ", self.ENOB(quantization_values, reconstructed_values))
 
         plt.tight_layout()
 
+        # Zapisanie wykresu do obiektu BytesIO
         image_stream = BytesIO()
         plt.savefig(image_stream, format='png')
         image_stream.seek(0)
         image_base64 = base64.b64encode(image_stream.read()).decode('utf-8')
 
-        return image_base64
+        # Obliczenia dodatkowych parametrów
+        mean_sq_err = self.mean_sq_error(quantization_values, reconstructed_values)
+        snr = self.SNR(quantization_values, reconstructed_values)
+        peak_snr = self.peak_SNR(quantization_values, reconstructed_values)
+        max_diff = self.max_difference(quantization_values, reconstructed_values)
+        enob = self.ENOB(quantization_values, reconstructed_values)
+
+        # Wypisanie dodatkowych parametrów
+        print("Blad sredniokwadratowy:", self.mean_sq_error(quantization_values, reconstructed_values))
+        print("SNR:", snr)
+        print("PEAK SNR:", peak_snr)
+        print("Max dif:", max_diff)
+        print("ENOB:", enob)
+
+        extra_params = {
+            'MSE': mean_sq_err,
+            'SNR': snr,
+            'PSNR': peak_snr,
+            'MD': max_diff,
+            'ENOB': enob
+        }
+
+        return image_base64, extra_params
 
     # (S1) szum o rozkładzie jednostajnym;
     def uniform_distribution(self, time):

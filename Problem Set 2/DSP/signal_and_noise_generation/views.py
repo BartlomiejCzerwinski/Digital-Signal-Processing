@@ -22,16 +22,13 @@ def draw_plot(request):
         jump_time = float(request.POST['jump_time'])
         p = float(request.POST['p'])
         f = int(request.POST['f'])
-        bins_num = int(request.POST['bins_num'])
-        print("bins: ", bins_num)
         g = generator.Generator(amplitude, start_time, duration, T, kw,
-                                jump_time, p, f, fct, bins_num)
-        plot = g.generate_plot()
+                                jump_time, p, f, fct)
+        plot, extra_params = g.generate_plot()
         global SAVE_T1, SAVE_F, SAVE_VALUES
         SAVE_T1 = start_time
         SAVE_F = f
         SAVE_VALUES = g.get_values()
-
 
         mean_value = g.calculate_mean_value(g.t1, g.t1 + g.d)
         mean_abs_value = g.calculate_mean_abs_value(g.t1, g.t1 + g.d)
@@ -45,4 +42,5 @@ def draw_plot(request):
                        'mean_abs_value': mean_abs_value,
                        'effective_value': effective_value,
                        'variance': variance,
-                       'mean_power': mean_power})
+                       'mean_power': mean_power,
+                       'extra_params': extra_params})
