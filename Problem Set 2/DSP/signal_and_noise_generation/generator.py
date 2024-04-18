@@ -9,7 +9,7 @@ from scipy.integrate import quad
 
 class Generator:
 
-    def __init__(self, A, t1, d, T, kw, ts, p, f, function_name):
+    def __init__(self, A, t1, d, T, kw, ts, p, f, fq, fsinc, function_name):
         self.A = A          # Amplituda
         self.t1 = t1        # Czas początkowy
         self.d = d          # Czas trwania sygnału
@@ -18,6 +18,8 @@ class Generator:
         self.ts = ts        # Skok czasowy
         self.p = p          # Prawdopodobieństwo wystąpienia wartości A (szum impulsowy)
         self.f = f          # Częstotliwość próbkowania
+        self.fq = fq
+        self.fsinc = fsinc
         self.function = self.setFunctionByName(function_name)
         self.values = []
         if function_name == 'unit_impulse' or function_name == 'impulse_noise':
@@ -63,7 +65,7 @@ class Generator:
 
     def sinc_reconstruction(self, times, quantization_values):
         reconstructed_signal = np.zeros(len(times))
-        T = 1 / 20  # Okres próbkowania
+        T = 1 / self.fsinc  # Okres próbkowania
         for i, t in enumerate(times):
             for j, quant_time in enumerate(times):
                 reconstructed_signal[i] += quantization_values[j] * self.sinc((t - quant_time) / T)
@@ -113,8 +115,7 @@ class Generator:
         values = [self.function(self, t) for t in times]
 
         # Kwantyzacja równomierna z zaokrągleniem
-        quantization_frequency = 10  # Częstotliwość kwantyzacji (Hz)
-        quantization_step = int(self.f / quantization_frequency)
+        quantization_step = int(self.f / self.fq)
         quantization_times = times_for_plot[::quantization_step]
         quantization_values = [round(self.function(self, t), 1) for t in quantization_times]
 

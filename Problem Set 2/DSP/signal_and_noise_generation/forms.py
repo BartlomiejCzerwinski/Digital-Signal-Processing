@@ -16,7 +16,13 @@ class Form_add(forms.Form):
     p = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prawdopodobieństwo (p)'}),
                                 label='', validators=[is_positive_validator], initial=0)
     f = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Częstotliwosc próbkowania'}),
-                                label='', validators=[is_positive_validator], initial=0)
+                                label='', validators=[is_positive_validator], initial=50)
+    fq = forms.FloatField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Częstotliwosc próbkowania kwantyzacji'}),
+        label='', validators=[is_positive_validator], initial=20)
+    fsinc = forms.FloatField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Częstotliwosc próbkowania sinc'}),
+        label='', validators=[is_positive_validator], initial=10)
     dropdown_choices = [
         ('sinusoidal_signal', 'Sygnał sinusoidalny'),
         ('half_wave_rectifier_signal', 'Sygnał sinusoidalny wyprostowany jednopołówkowo'),
