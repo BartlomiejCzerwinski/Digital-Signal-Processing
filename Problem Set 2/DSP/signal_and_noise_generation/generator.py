@@ -64,20 +64,31 @@ class Generator:
             return np.sin(np.pi * x) / (np.pi * x)
 
     def sinc_reconstruction(self, times, quantization_values):
-        reconstructed_signal = np.zeros(len(times))
-        T = 1 / self.fsinc  # Okres próbkowania
-        for i, t in enumerate(times):
-            for j, quant_time in enumerate(times):
-                reconstructed_signal[i] += quantization_values[j] * self.sinc((t - quant_time) / T)
+        num_points = int(self.fsinc * self.d)
+        reconstruction_times = np.linspace(self.t1, self.t1 + self.d, num_points)
+        reconstructed_signal = np.zeros(num_points)
+        T = 1 / self.fsinc
 
-        print(len(reconstructed_signal))
-        return reconstructed_signal
+        window_width = 30
+        start = int(self.t1)
+        end = int(self.t1 + window_width + 1)
+        for i, t in enumerate(reconstruction_times):
+            for j in range(start, end):
+                reconstructed_signal[i] += quantization_values[j] * self.sinc((t - times[j]) / T)
+
+            start += 1
+            end += 1
+            if end >= len(times):
+                end = len(times) - 1
+
+        return reconstructed_signal, reconstruction_times
 
 
     def mean_sq_error(self, real_values, predicted_values):
         err = 0
         for i in range(len(real_values)):
-            err += (real_values[i] - predicted_values[i])**2
+            if i < len(real_values) and i < len(predicted_values):
+                err += (real_values[i] - predicted_values[i])**2
         err /= len(real_values)
         return err
 
@@ -87,7 +98,8 @@ class Generator:
             real_sum += (i**2)
         mean_sq_err = 0
         for i in range(len(real_values)):
-            mean_sq_err += (real_values[i] - predicted_values[i]) ** 2
+            if i < len(real_values) and i < len(predicted_values):
+                mean_sq_err += (real_values[i] - predicted_values[i]) ** 2
         return 10*math.log10(real_sum/mean_sq_err)
 
     def peak_SNR(self, real_values, predicted_values):
@@ -98,8 +110,9 @@ class Generator:
     def max_difference(self, real_values, predicted_values):
         max_dif = 0
         for i in range(len(real_values)):
-            if abs(real_values[i] - predicted_values[i]) > max_dif:
-                max_dif = abs(real_values[i] - predicted_values[i])
+            if i < len(real_values) and i < len(predicted_values):
+                if abs(real_values[i] - predicted_values[i]) > max_dif:
+                    max_dif = abs(real_values[i] - predicted_values[i])
         return max_dif
 
     def ENOB(self, real_values, predicted_values):
@@ -150,10 +163,10 @@ class Generator:
         axes[3].set_ylabel('Amplituda')
         axes[3].set_title('Ekstrapolacja zerowego rzędu')
         axes[3].grid(True)
-        reconstructed_values = self.sinc_reconstruction(quantization_times, quantization_values)
-
-        # Wykres kwantyzacji
-        axes[4].plot(quantization_times, reconstructed_values)
+        reconstructed_values, reconstructed_times = self.sinc_reconstruction(quantization_times, quantization_values)
+        print(reconstructed_times)
+        # Wykres po rekonstrukcji
+        axes[4].plot(reconstructed_times, reconstructed_values)
         axes[4].set_xlabel('Czas (s)')
         axes[4].set_ylabel('Amplituda')
         axes[4].set_title('Rekonstrukcja w oparciu o funkcję sinc')
@@ -162,9 +175,9 @@ class Generator:
         print(reconstructed_values)
         print("Blad sredniokwadratowy", self.mean_sq_error(quantization_values, reconstructed_values))
         print("SNR: ", self.SNR(quantization_values, reconstructed_values))
-        print("PEAK SNR: ", self.peak_SNR(quantization_values, reconstructed_values))
-        print("Max dif: ", self.max_difference(quantization_values, reconstructed_values))
-        print("ENOB: ", self.ENOB(quantization_values, reconstructed_values))
+        print("PEAK SNR: ", 0)#self.peak_SNR(quantization_values, reconstructed_values))
+        print("Max dif: ", 0)#self.max_difference(quantization_values, reconstructed_values))
+        print("ENOB: ", 0)#self.ENOB(quantization_values, reconstructed_values))
 
         plt.tight_layout()
 
@@ -184,9 +197,9 @@ class Generator:
         # Wypisanie dodatkowych parametrów
         print("Blad sredniokwadratowy:", self.mean_sq_error(quantization_values, reconstructed_values))
         print("SNR:", snr)
-        print("PEAK SNR:", peak_snr)
-        print("Max dif:", max_diff)
-        print("ENOB:", enob)
+        #print("PEAK SNR:", peak_snr)
+        #print("Max dif:", max_diff)
+        #print("ENOB:", enob)
 
         extra_params = {
             'MSE': mean_sq_err,
