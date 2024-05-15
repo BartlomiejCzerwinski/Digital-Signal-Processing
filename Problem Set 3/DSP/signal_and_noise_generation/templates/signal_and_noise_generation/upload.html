@@ -1,0 +1,33 @@
+{% extends "signal_and_noise_generation/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<ul class="nav nav-pills justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link"href="{%url 'index'%}">Rysuj</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{%url 'operation'%}">Operacje</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="{%url 'upload_plot'%}">Wgraj wykres</a>
+    </li>
+</ul>
+
+<form id="drawPlotForm" method="post" action="{%url 'upload_plot'%}">
+    {% csrf_token %}
+    <div class="row mb-3 row-input">
+        <h2>Wgraj wykres</h2>
+    </div>
+    <div class="row mb-3 row-input">
+            {{ form.file }}
+    </div>
+
+    <div class="row mb-3 row-input">
+        <button type="submit" class="btn btn-primary">Rysuj wykres</button>
+    </div>
+
+</form>
+
+{% endblock %}

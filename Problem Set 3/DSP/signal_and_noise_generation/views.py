@@ -1,0 +1,118 @@
+import struct
+import time
+
+from django.http import HttpResponse, FileResponse
+from django.shortcuts import render
+from . import forms
+from . import generator
+from . import convolution
+from . import operator
+
+SAVE_T1 = 0
+SAVE_F = 1
+SAVE_VALUES = []
+
+def index(request):
+    form = forms.Form_add()
+    return render(request, "signal_and_noise_generation/index.html",
+                  {'form': form})
+
+def operation(request):
+    form = forms.Form_operation()
+    return render(request, "signal_and_noise_generation/operation.html",
+                  {'form': form})
+
+def calculate_operation(request):
+    if request.method == 'POST':
+        print(request.POST)
+        fct1 = request.POST['function1']
+        amplitude1 = float(request.POST['amplitude1'])
+        start_time1 = float(request.POST['start_time1'])
+        duration1 = float(request.POST['duration1'])
+        T1 = float(request.POST['T1'])
+        kw1 = float(request.POST['kw1'])
+        jump_time1 = float(request.POST['jump_time1'])
+        p1 = float(request.POST['p1'])
+        f1 = int(request.POST['f1'])
+        fct2 = request.POST['function2']
+        amplitude2 = float(request.POST['amplitude2'])
+        start_time2 = float(request.POST['start_time2'])
+        duration2 = float(request.POST['duration2'])
+        T2 = float(request.POST['T2'])
+        kw2 = float(request.POST['kw2'])
+        jump_time2 = float(request.POST['jump_time2'])
+        p2 = float(request.POST['p2'])
+        f2= int(request.POST['f2'])
+        g1 = generator.Generator(amplitude1, start_time1, duration1,
+                                 T1, kw1, jump_time1, p1, f1, fct1, 0*5)
+        g2 = generator.Generator(amplitude2, start_time2, duration2,
+                                 T2, kw2, jump_time2, p2, f2, fct2, 0*5)
+
+        plot = convolution.generate_plot(g1.get_values_and_times()[0], g2.get_values_and_times()[0])
+        return render(request, "signal_and_noise_generation/plot.html",
+                      {'plot': plot})
+
+def draw_plot(request):
+    if request.method == 'POST':
+        fct = request.POST['function']
+        amplitude = float(request.POST['amplitude'])
+        start_time = float(request.POST['start_time'])
+        duration = float(request.POST['duration'])
+        T = float(request.POST['T'])
+        kw = float(request.POST['kw'])
+        jump_time = float(request.POST['jump_time'])
+        p = float(request.POST['p'])
+        f = int(request.POST['f'])
+        bins_num = int(request.POST['bins_num'])
+        print("bins: ", bins_num)
+        g = generator.Generator(amplitude, start_time, duration, T, kw,
+                                jump_time, p, f, fct, bins_num)
+        plot = g.generate_plot()
+        global SAVE_T1, SAVE_F, SAVE_VALUES
+        SAVE_T1 = start_time
+        SAVE_F = f
+        SAVE_VALUES = g.get_values()
+
+
+        mean_value = g.calculate_mean_value(g.t1, g.t1 + g.d)
+        mean_abs_value = g.calculate_mean_abs_value(g.t1, g.t1 + g.d)
+        effective_value = g.calculate_effective_value(g.t1, g.t1 + g.d)
+        variance = g.calculate_variance(g.t1, g.t1 + g.d)
+        mean_power = g.calculate_mean_power(g.t1, g.t1 + g.d)
+
+        return render(request, "signal_and_noise_generation/plot.html",
+                      {'plot': plot,
+                       'mean_value': mean_value,
+                       'mean_abs_value': mean_abs_value,
+                       'effective_value': effective_value,
+                       'variance': variance,
+                       'mean_power': mean_power})
+
+def save_plot(request):
+    global SAVE_T1, SAVE_F, SAVE_VALUES
+    print("T1:", SAVE_T1)
+    print("F:", SAVE_F)
+    print("save values:", SAVE_VALUES)
+    all_values = [SAVE_T1, SAVE_F] + SAVE_VALUES
+
+    data_format = 'dd' + 'd' * len(SAVE_VALUES)
+
+    binary_data = struct.pack(data_format, *all_values)
+
+    with open('dane.bin', 'wb') as f:
+        f.write(binary_data)
+
+    response = FileResponse(open('dane.bin', 'rb'))
+    response['Content-Disposition'] = 'attachment; filename="dane.bin"'
+
+    return response
+
+def upload_plot(request):
+    form = forms.File_upload_form()
+    if request.method == "POST":
+        uploaded_file = request.FILES['file']
+
+    return render(request, "signal_and_noise_generation/upload.html",
+                  {'form': form})
+
+

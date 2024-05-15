@@ -1,0 +1,52 @@
+{% extends "signal_and_noise_generation/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<ul class="nav nav-pills justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link" href="{%url 'index'%}">Rysuj</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{%url 'operation'%}">Operacje</a>
+    </li>
+</ul>
+
+<img src="data:image/png;base64,{{ plot }}" alt="Plot">
+
+<form id="drawPlotForm">
+    <h3> Parametry sygnału </h3>
+
+    <p>Wartość średnia sygnału: {{ mean_value }}</p>
+    <p>Wartość średnia bezwzględna sygnału: {{ mean_abs_value }}</p>
+    <p>Wartość skuteczna sygnału: {{ effective_value }}</p>
+    <p>Wariancja sygnału: {{ variance }}</p>
+    <p>Moc średnia sygnału: {{ mean_power }}</p>
+
+</form>
+
+<div class="row mb-3 row-input">
+        <button id="saveButton" type="submit" class="btn btn-primary">Zapisz wykres</button>
+</div>
+
+<script>
+    document.getElementById("saveButton").addEventListener("click", function() {
+        const serverUrl = '/save_plot';
+
+        fetch(serverUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'dane.bin';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                alert('Wystąpił błąd podczas zapisywania wykresu!');
+            });
+    });
+</script>
+{% endblock %}

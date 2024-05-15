@@ -1,0 +1,42 @@
+.nav {
+    padding-top: 10px;
+    padding-bottom: 30px;
+}
+
+body {
+    text-align: center;
+}
+.body {
+    width: 50%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.addFormInput {
+    width: 40%;
+    flex: 1;
+    margin: 0 50px;
+}
+
+
+.row-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+#drawPlotForm {
+    border: 1px solid #4c4847;
+    border-radius: 30px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+
+
+.row-fade-out {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+}
