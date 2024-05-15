@@ -8,14 +8,14 @@
         <a class="nav-link" href="{%url 'index'%}">Rysuj</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{%url 'operation'%}">Splot</a>
+        <a class="nav-link" href="{%url 'operation'%}">Splot</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{%url 'filter'%}">Filtr</a>
+        <a class="nav-link active" aria-current="page" href="{%url 'filter'%}">Filtr</a>
     </li>
 </ul>
 
-<form id="drawPlotForm" method="post" action="{%url 'calculate_operation'%}">
+<form id="drawPlotForm" method="post" action="{%url 'filter_operation'%}">
     {% csrf_token %}
     <div class="row mb-3 row-input">
         <h2>Splot</h2>
@@ -80,69 +80,24 @@
             <span class="input-group-text">Hz</span>
         </div>
     </div>
-
-    <div class="row mb-3 row-input">
-        <h3>Sygnał 2</h3>
-    </div>
-
     <div class="row mb-3 row-input">
         <div class="input-group addFormInput">
-            {{ form.function2 }}
+            {{ form.filter_level }}
+            <span class="input-group-text">Rząd filtru</span>
+        </div>
+        <div class="input-group addFormInput">
+            {{ form.cutoff_frequency }}
         </div>
     </div>
     <div class="row mb-3 row-input">
         <div class="input-group addFormInput">
-            {{ form.amplitude2 }}
-            <span class="input-group-text">Amplituda</span>
-            <span class="input-group-text">(A)</span>
+            {{ form.filter }}
         </div>
+
         <div class="input-group addFormInput">
-            {{ form.start_time2 }}
-            <span class="input-group-text">Czas początkowy</span>
-            <span class="input-group-text">(s)</span>
+            {{ form.window }}
         </div>
     </div>
-    <p> </p>
-
-    <div class="row mb-3 row-input">
-        <div class="input-group addFormInput">
-            {{ form.duration2 }}
-            <span class="input-group-text">Czas trwania</span>
-            <span class="input-group-text">(s)</span>
-        </div>
-        <div class="input-group addFormInput">
-            {{ form.T2 }}
-            <span class="input-group-text">Okres podstawowy</span>
-            <span class="input-group-text">(T)</span>
-        </div>
-    </div>
-
-    <div class="row mb-3 row-input">
-        <div class="input-group addFormInput">
-            {{ form.kw2 }}
-            <span class="input-group-text">Wsp. wypełnienia</span>
-            <span class="input-group-text">(kw)</span>
-        </div>
-        <div class="input-group addFormInput">
-            {{ form.jump_time2 }}
-            <span class="input-group-text">Czas skoku</span>
-            <span class="input-group-text">(s)</span>
-        </div>
-    </div>
-
-    <div class="row mb-3 row-input">
-        <div class="input-group addFormInput">
-            {{ form.p2 }}
-            <span class="input-group-text">Prawdopodobieństwo</span>
-            <span class="input-group-text">(p)</span>
-        </div>
-        <div class="input-group addFormInput">
-            {{ form.f2 }}
-            <span class="input-group-text">Częst. prób.</span>
-            <span class="input-group-text">Hz</span>
-        </div>
-    </div>
-
     <div class="row mb-3 row-input">
         <button type="submit" class="btn btn-primary">Rysuj wykres</button>
     </div>

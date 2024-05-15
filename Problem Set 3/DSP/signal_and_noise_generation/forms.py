@@ -44,6 +44,53 @@ class Form_add(forms.Form):
         widget=forms.RadioSelect()
     )
 
+class Form_filter(forms.Form):
+    amplitude1 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Amplituda (A)'}), label='', validators=[is_positive_validator])
+    start_time1 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Czas początkowy (t1)'}), label='', validators=[is_positive_validator])
+    duration1 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Czas trwania sygnału(d)'}), label='', validators=[is_positive_validator])
+    T1 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Okres podstawowy (T)'}), label='', validators=[is_positive_validator])
+    kw1 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Współczynnik wypełnienia (kw)'}),
+                                label='', validators=[is_positive_validator])
+    jump_time1 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Czas skoku (ts)'}),
+                                label='', validators=[is_positive_validator])
+    p1 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prawdopodobieństwo (p)'}),
+                                label='', validators=[is_positive_validator])
+    f1 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Częstotliwosc próbkowania'}),
+                                label='', validators=[is_positive_validator])
+    filter_level = forms.IntegerField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Rząd filtru'}),
+        label='', validators=[is_positive_validator])
+
+    cutoff_frequency = forms.IntegerField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Częstotliwosc odcięcia'}),
+        label='', validators=[is_positive_validator])
+
+    dropdown_choices = [
+        ('sinusoidal_signal', 'Sygnał sinusoidalny'),
+        ('half_wave_rectifier_signal', 'Sygnał sinusoidalny wyprostowany jednopołówkowo'),
+        ('full_wave_rectifier_signal', 'Sygnał sinusoidalny wyprostowany dwupołówkowo'),
+        ('rectangular_signal', 'Sygnał prostokątny'),
+        ('rectangular_symmetrical_signal', 'Sygnał prostokątny symetryczny'),
+        ('triangular_signal', 'Sygnał trójkątny'),
+
+    ]
+    function1 = forms.ChoiceField(choices=dropdown_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    window_choices = [
+        ('okno prostokątne', 'okno prostokątne'),
+        ('okno Hamminga', 'okno Hamminga'),
+    ]
+
+    window = forms.ChoiceField(choices=window_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    filter_choices = [
+        ('dolnoprzepustowy', 'dolnoprzepustowy'),
+        ('górnoprzepustowy', 'górnoprzepustowy'),
+    ]
+
+    filter = forms.ChoiceField(choices=filter_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+
+
 
 class Form_operation(forms.Form):
     amplitude1 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Amplituda (A)'}), label='', validators=[is_positive_validator])

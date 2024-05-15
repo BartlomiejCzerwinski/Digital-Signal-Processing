@@ -7,6 +7,7 @@ from . import forms
 from . import generator
 from . import convolution
 from . import operator
+from . import filter as filters
 
 SAVE_T1 = 0
 SAVE_F = 1
@@ -21,6 +22,53 @@ def operation(request):
     form = forms.Form_operation()
     return render(request, "signal_and_noise_generation/operation.html",
                   {'form': form})
+
+def filter(request):
+    form = forms.Form_filter()
+    return render(request, "signal_and_noise_generation/filter.html",
+                  {'form': form})
+
+def filter_operation(request):
+    if request.method == 'POST':
+        print(request.POST)
+        fct1 = request.POST['function1']
+        amplitude1 = float(request.POST['amplitude1'])
+        start_time1 = float(request.POST['start_time1'])
+        duration1 = float(request.POST['duration1'])
+        T1 = float(request.POST['T1'])
+        kw1 = float(request.POST['kw1'])
+        jump_time1 = float(request.POST['jump_time1'])
+        p1 = float(request.POST['p1'])
+        f1 = int(request.POST['f1'])
+        filter_level = int(request.POST['filter_level'])
+        window = request.POST['window']
+        filter = request.POST['filter']
+        cutoff = int(request.POST['cutoff_frequency'])
+
+        g1 = generator.Generator(amplitude1, start_time1, duration1,
+                                 T1, kw1, jump_time1, p1, f1, fct1, 0 * 5)
+        values, times = g1.get_values_and_times()
+
+        if filter == "dolnoprzepustowy":
+            if window == "okno prostokątne":
+                plot = filters.low_pass_fir_filter_rectangular(values, cutoff, f1, filter_level)
+                return render(request, "signal_and_noise_generation/plot.html",
+                              {'plot': plot})
+            else:
+                print("AAA")
+                plot = filters.low_pass_fir_filter_hamming(values, cutoff, f1, filter_level)
+                return render(request, "signal_and_noise_generation/plot.html",
+                              {'plot': plot})
+        else:
+            if window == "okno prostokątne":
+                plot = filters.high_pass_fir_filter_rectangular(values, cutoff, f1, filter_level)
+                return render(request, "signal_and_noise_generation/plot.html",
+                              {'plot': plot})
+            else:
+                plot = filters.high_pass_fir_filter_hamming(values, cutoff, f1, filter_level)
+                return render(request, "signal_and_noise_generation/plot.html",
+                              {'plot': plot})
+
 
 def calculate_operation(request):
     if request.method == 'POST':
@@ -51,6 +99,7 @@ def calculate_operation(request):
         plot = convolution.generate_plot(g1.get_values_and_times()[0], g2.get_values_and_times()[0])
         return render(request, "signal_and_noise_generation/plot.html",
                       {'plot': plot})
+
 
 def draw_plot(request):
     if request.method == 'POST':
