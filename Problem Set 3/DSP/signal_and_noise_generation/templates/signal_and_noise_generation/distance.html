@@ -1,0 +1,85 @@
+{% extends "signal_and_noise_generation/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<ul class="nav nav-pills justify-content-center">
+
+    <li class="nav-item">
+        <a class="nav-link" href="{%url 'operation'%}">Splot</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{%url 'filter'%}">Filtr</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{%url 'correlation'%}">Korelacja</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="{%url 'distance'%}">Odległość</a>
+    </li>
+</ul>
+
+<form id="drawPlotForm" method="post" action="{%url 'calculate_distance'%}">
+    {% csrf_token %}
+    <div class="row mb-3 row-input">
+        <h2>Odległość</h2>
+    </div>
+    <div class="row mb-3 row-input">
+        <h3>Parametry</h3>
+    </div>
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.number_of_measures }}
+            <span class="input-group-text">Liczba pomiarów</span>
+        </div>
+        <div class="input-group addFormInput">
+            {{ form.time_unit }}
+            <span class="input-group-text">J. czasowa</span>
+        </div>
+    </div>
+    <p> </p>
+
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.real_speed }}
+            <span class="input-group-text">Pręd. rzeczywista</span>
+        </div>
+        <div class="input-group addFormInput">
+            {{ form.speed_inside }}
+            <span class="input-group-text">Pręd. w abstr. osrodku</span>
+        </div>
+    </div>
+
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.T }}
+            <span class="input-group-text">Okres</span>
+        </div>
+    </div>
+
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.f }}
+            <span class="input-group-text">Częst. próbkowania</span>
+            <span class="input-group-text">Hz</span>
+        </div>
+        <div class="input-group addFormInput">
+            {{ form.buffer }}
+            <span class="input-group-text">Dł. bufforów</span>
+        </div>
+    </div>
+
+    <div class="row mb-3 row-input">
+        <div class="input-group addFormInput">
+            {{ form.report }}
+            <span class="input-group-text">Okres raportowania</span>
+        </div>
+    </div>
+
+    <div class="row mb-3 row-input">
+        <button type="submit" class="btn btn-primary">Rysuj wykres</button>
+    </div>
+
+</form>
+
+{% endblock %}

@@ -6,20 +6,20 @@
 <ul class="nav nav-pills justify-content-center">
 
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{%url 'operation'%}">Splot</a>
+        <a class="nav-link" href="{%url 'operation'%}">Splot</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{%url 'filter'%}">Filtr</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{%url 'correlation'%}">Korelacja</a>
+        <a class="nav-link active" href="{%url 'correlation'%}">Korelacja</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{%url 'distance'%}">Odległość</a>
     </li>
 </ul>
 
-<form id="drawPlotForm" method="post" action="{%url 'calculate_operation'%}">
+<form id="drawPlotForm" method="post" action="{%url 'calculate_correlation'%}">
     {% csrf_token %}
     <div class="row mb-3 row-input">
         <h2>Splot</h2>

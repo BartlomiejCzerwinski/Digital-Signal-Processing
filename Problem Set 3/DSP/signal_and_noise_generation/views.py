@@ -8,6 +8,8 @@ from . import generator
 from . import convolution
 from . import operator
 from . import filter as filters
+from . import correlation as correlations
+import numpy as np
 
 SAVE_T1 = 0
 SAVE_F = 1
@@ -27,6 +29,118 @@ def filter(request):
     form = forms.Form_filter()
     return render(request, "signal_and_noise_generation/filter.html",
                   {'form': form})
+
+def correlation(request):
+    form = forms.Form_operation()
+    return render(request, "signal_and_noise_generation/correlation.html",
+                  {'form': form})
+
+def distance(request):
+    form = forms.Form_distance()
+    return render(request, "signal_and_noise_generation/distance.html",
+                  {'form': form})
+
+import numpy as np
+from django.shortcuts import render
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+
+def generate_signal(frequency, amplitude, phase, length, sampling_rate):
+    t = np.arange(0, length, 1/sampling_rate)
+    signal = amplitude * np.sin(2 * np.pi * frequency * t + phase)
+    return t, signal
+
+def calculate_correlation_distance(signal1, signal2, sampling_rate, speed):
+    correlation = np.correlate(signal1, signal2, mode='full')
+    max_corr_index = np.argmax(correlation)
+    lag = max_corr_index - len(signal1) + 1
+    time_delay = lag / sampling_rate
+    distance = time_delay * speed / 2
+    return distance
+
+def generate_plot(signal1, signal2, times, calculated_distances, real_distances):
+    fig, axs = plt.subplots(3, 1, figsize=(12, 8))
+
+    axs[0].plot(signal1, label='Sygnał wysłany')
+    axs[0].legend()
+    axs[0].set_title('Sygnał wysłany')
+    axs[0].set_xlabel('Czas [s]')
+    axs[0].set_ylabel('Amplituda')
+
+    axs[1].plot(signal2, label='Sygnał odbity')
+    axs[1].legend()
+    axs[1].set_title('Sygnał odbity')
+    axs[1].set_xlabel('Czas [s]')
+    axs[1].set_ylabel('Amplituda')
+
+    axs[2].plot(times, calculated_distances, marker='o', linestyle='-', color='r', label='Obliczona odległość')
+    axs[2].plot(times, real_distances, marker='x', linestyle='--', color='b', label='Rzeczywista odległość')
+    axs[2].legend()
+    axs[2].set_title('Odległość w czasie')
+    axs[2].set_xlabel('Czas [s]')
+    axs[2].set_ylabel('Odległość [m]')
+
+    plt.tight_layout()
+
+    image_stream = BytesIO()
+    plt.savefig(image_stream, format='png')
+    image_stream.seek(0)
+    image_base64 = base64.b64encode(image_stream.read()).decode('utf-8')
+    plt.close()
+
+    return image_base64
+
+
+def calculate_distance(request):
+    if request.method == 'POST':
+        number_of_measures = int(request.POST['number_of_measures'])
+        time_unit = float(request.POST['time_unit'])
+        real_speed = float(request.POST['real_speed'])
+        speed_inside = float(request.POST['speed_inside'])
+        T = float(request.POST['T'])
+        f = float(request.POST['f'])
+        buffer = int(request.POST['buffer'])
+        report = float(request.POST['report'])
+
+        sampling_rate = 1 / time_unit  # Przeliczenie jednostki czasowej na częstotliwość próbkowania
+        length = buffer / sampling_rate  # Długość sygnału w sekundach
+        t, sent_signal = generate_signal(f, 1, 0, length, sampling_rate)
+
+        time_delay = (2 * real_speed) / speed_inside  # Czas opóźnienia
+        samples_delay = int(time_delay * sampling_rate)  # Opóźnienie w próbkach
+
+        # Generowanie sygnału zwrotnego z opóźnieniem
+        received_signal = np.zeros_like(sent_signal)
+        if samples_delay < len(sent_signal):
+            received_signal[samples_delay:] = sent_signal[:-samples_delay]
+
+        estimated_distance = calculate_correlation_distance(sent_signal, received_signal, sampling_rate, speed_inside)
+
+        # Wyświetlanie odległości w regularnych odstępach czasowych
+        times = np.arange(0, number_of_measures * time_unit, time_unit)
+        calculated_distances = []
+        real_distances = [real_speed * time for time in times]
+        for time in times:
+            idx = int(time * sampling_rate)
+            if idx <= len(sent_signal) and idx > 0:
+                sub_sent_signal = sent_signal[:idx]
+                sub_received_signal = received_signal[:idx]
+                if len(sub_sent_signal) > 0 and len(sub_received_signal) > 0:
+                    distance = calculate_correlation_distance(sub_sent_signal, sub_received_signal, sampling_rate, speed_inside)
+                    calculated_distances.append(abs(distance))
+                    print(f"DYSTANS (czas {time} s): {distance}")
+                else:
+                    calculated_distances.append(None)
+                    print(f"DYSTANS (czas {time} s): N/A - brak wystarczającej długości sygnału")
+            else:
+                calculated_distances.append(None)
+                print(f"DYSTANS (czas {time} s): N/A - brak wystarczającej długości sygnału")
+
+        plot = generate_plot(sent_signal, received_signal, times, calculated_distances, real_distances)
+        return render(request, "signal_and_noise_generation/plot.html", {'plot': plot})
+
+    return render(request, "simulate.html")
 
 def filter_operation(request):
     if request.method == 'POST':
@@ -69,6 +183,35 @@ def filter_operation(request):
                 return render(request, "signal_and_noise_generation/plot.html",
                               {'plot': plot})
 
+def calculate_correlation(request):
+    if request.method == 'POST':
+        print(request.POST)
+        fct1 = request.POST['function1']
+        amplitude1 = float(request.POST['amplitude1'])
+        start_time1 = float(request.POST['start_time1'])
+        duration1 = float(request.POST['duration1'])
+        T1 = float(request.POST['T1'])
+        kw1 = float(request.POST['kw1'])
+        jump_time1 = float(request.POST['jump_time1'])
+        p1 = float(request.POST['p1'])
+        f1 = int(request.POST['f1'])
+        fct2 = request.POST['function2']
+        amplitude2 = float(request.POST['amplitude2'])
+        start_time2 = float(request.POST['start_time2'])
+        duration2 = float(request.POST['duration2'])
+        T2 = float(request.POST['T2'])
+        kw2 = float(request.POST['kw2'])
+        jump_time2 = float(request.POST['jump_time2'])
+        p2 = float(request.POST['p2'])
+        f2= int(request.POST['f2'])
+        g1 = generator.Generator(amplitude1, start_time1, duration1,
+                                 T1, kw1, jump_time1, p1, f1, fct1, 0*5)
+        g2 = generator.Generator(amplitude2, start_time2, duration2,
+                                 T2, kw2, jump_time2, p2, f2, fct2, 0*5)
+
+        plot = correlations.generate_plot(g1.get_values_and_times()[0], g2.get_values_and_times()[0])
+        return render(request, "signal_and_noise_generation/plot.html",
+                      {'plot': plot})
 
 def calculate_operation(request):
     if request.method == 'POST':
