@@ -58,29 +58,20 @@ class Generator:
 
     # Corrected sinc method
     def sinc(self, x):
-        if x == 0:
-            return 1
-        else:
-            return np.sin(np.pi * x) / (np.pi * x)
+        return np.sinc(x)
 
     def sinc_reconstruction(self, times, quantization_values):
         num_points = int(self.fsinc * self.d)
         reconstruction_times = np.linspace(self.t1, self.t1 + self.d, num_points)
+        print("DEBUG: ", reconstruction_times)
         reconstructed_signal = np.zeros(num_points)
-        T = 1 / self.fsinc
+        T = times[1] - times[0]  # Zakładając, że czasy próbkowania są równomiernie rozłożone
+        print("TTT: ", T)
 
-        window_width = 5
-        start = int(self.t1)
-        end = int(self.t1 + window_width + 1)
         for i, t in enumerate(reconstruction_times):
-            for j in range(start, end):
-                reconstructed_signal[i] += quantization_values[j] * self.sinc((t - times[j]) / T)
-
-            start += 1
-            end += 1
-            if end >= len(times):
-                end = len(times) - 1
-
+            for n, j in zip(times, quantization_values):
+                reconstructed_signal[i] += j * self.sinc((t - n) / T)
+        reconstruction_times /= T
         return reconstructed_signal, reconstruction_times
 
 
@@ -166,7 +157,12 @@ class Generator:
         reconstructed_values, reconstructed_times = self.sinc_reconstruction(quantization_times, quantization_values)
         print(reconstructed_times)
         # Wykres po rekonstrukcji
-        axes[4].plot(reconstructed_times, reconstructed_values)
+        axes[4].plot(reconstructed_times/self.fq, reconstructed_values, label='Zrekonstruowany', color='red')
+        axes[4].plot(quantization_times, quantization_values, drawstyle='steps-post', alpha=0.2, label='Kwantyzacja')
+        axes[4].plot(times_for_plot, values, alpha=0.2, label='Oryginalny')
+
+        # Dodanie legendy do wykresu
+        axes[4].legend(loc='upper right')
         axes[4].set_xlabel('Czas (s)')
         axes[4].set_ylabel('Amplituda')
         axes[4].set_title('Rekonstrukcja w oparciu o funkcję sinc')
@@ -188,11 +184,11 @@ class Generator:
         image_base64 = base64.b64encode(image_stream.read()).decode('utf-8')
 
         # Obliczenia dodatkowych parametrów
-        #mean_sq_err = self.mean_sq_error(quantization_values, reconstructed_values)
-        #snr = self.SNR(quantization_values, reconstructed_values)
-        #peak_snr = self.peak_SNR(quantization_values, reconstructed_values)
-        #max_diff = self.max_difference(quantization_values, reconstructed_values)
-        #enob = self.ENOB(quantization_values, reconstructed_values)
+        mean_sq_err = self.mean_sq_error(quantization_values, reconstructed_values)
+        snr = self.SNR(quantization_values, reconstructed_values)
+        peak_snr = self.peak_SNR(quantization_values, reconstructed_values)
+        max_diff = self.max_difference(quantization_values, reconstructed_values)
+        enob = self.ENOB(quantization_values, reconstructed_values)
 
         # Wypisanie dodatkowych parametrów
         print("Blad sredniokwadratowy:", self.mean_sq_error(quantization_values, reconstructed_values))
@@ -202,11 +198,11 @@ class Generator:
         #print("ENOB:", enob)
 
         extra_params = {
-            'MSE': 0,
-            'SNR': 0,
-            'PSNR': 0,
-            'MD': 0,
-            'ENOB': 0
+            'MSE': abs(mean_sq_err),
+            'SNR': abs(snr),
+            'PSNR': abs(peak_snr),
+            'MD': abs(max_diff),
+            'ENOB': abs(enob)
         }
 
         return image_base64, extra_params
