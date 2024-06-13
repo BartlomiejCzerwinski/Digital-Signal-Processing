@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 def generate_plot(values1,values2):
     y = np.convolve(values1, values2)
-    plt.stem(y, use_line_collection=True)
+    plt.stem(y)
     plt.xlabel('n')
     plt.ylabel('A')
     plt.grid(True)

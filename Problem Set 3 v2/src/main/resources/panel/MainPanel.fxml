@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.jkkk.cps.view.controller.mainpanel.MainPanel">
+    <children>
+
+        <TabPane fx:id="tabPaneInputs" layoutX="33.0" layoutY="14.0" prefHeight="568.0" prefWidth="494.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Generowanie">
+                    <AnchorPane prefHeight="473.0" prefWidth="494.0">
+                        <Label layoutX="177.0" layoutY="20.0" prefHeight="28.0" prefWidth="141.0" text="Wybierz Rodzaj Sygnału" />
+
+                        <ComboBox fx:id="comboBoxSignalTypes" layoutX="46.0" layoutY="56.0" prefHeight="29.0" prefWidth="402.0" />
+                        <Pane fx:id="chooseParamsTab" layoutX="14.0" layoutY="102.0" prefHeight="250.0" prefWidth="402.0" />
+                        <AnchorPane fx:id="windowTypePane" layoutX="23.0" layoutY="361.0" prefHeight="106.0" prefWidth="449.0">
+                            <children>
+                                <Label layoutX="172.0" layoutY="5.0" text="Wybierz Typ Okna" />
+                                <ComboBox layoutX="138.0" layoutY="30.0" prefHeight="29.0" prefWidth="174.0" />
+                            </children>
+                        </AnchorPane>
+
+                    </AnchorPane>
+                </Tab>
+
+                <Tab text="Próbkowanie">
+                    <AnchorPane>
+                        <Label layoutX="191.0" layoutY="22.0" prefHeight="28.0" prefWidth="108.0" text="Wybierz Operacje" visible="false" />
+                        <ComboBox fx:id="comboBoxOperationTypesOneArgs" layoutX="46.0" layoutY="50.0" prefHeight="29.0" prefWidth="400.0" visible="false" />
+                        <Label layoutX="222.0" layoutY="70.0" prefHeight="19.0" prefWidth="50.0" text="Sygnał" />
+                        <ComboBox fx:id="comboBoxSignalOneArgs" layoutX="45.0" layoutY="110.0" prefHeight="29.0" prefWidth="400.0" />
+                        <AnchorPane fx:id="oneArgsPane" layoutX="27.0" layoutY="225.0" prefHeight="284.0" prefWidth="437.0">
+                            <children>
+                                <AnchorPane layoutX="13.0" layoutY="14.0" prefHeight="84.0" prefWidth="411.0">
+                                    <children>
+                                        <Label layoutX="158.0" layoutY="14.0" text="Wybierz Metodę" visible="false" />
+                                        <ComboBox layoutX="7.0" layoutY="42.0" prefHeight="29.0" prefWidth="400.0" visible="false" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane layoutX="13.0" layoutY="128.0" prefHeight="84.0" prefWidth="411.0">
+                                </AnchorPane>
+                            </children>
+                        </AnchorPane>
+                    </AnchorPane>
+                </Tab>
+
+                <Tab text="Korelacja">
+                    <AnchorPane>
+                        <Label layoutX="191.0" layoutY="22.0" prefHeight="28.0" prefWidth="108.0" text="Rodzaj korelacji" />
+
+                        <ComboBox fx:id="comboBoxOperationTypesTwoArgs" layoutX="46.0" layoutY="50.0" prefHeight="29.0" prefWidth="402.0" />
+                        <Label layoutX="76.0" layoutY="130.0" text="Pierwszy Sygnał" />
+                        <ComboBox fx:id="comboBoxFirstSignalTwoArgs" layoutX="46.0" layoutY="165.0" prefWidth="150.0" />
+                        <Label layoutX="320.0" layoutY="130.0" text="Drugi Sygnał" />
+                        <ComboBox fx:id="comboBoxSecondSignalTwoArgs" layoutX="282.0" layoutY="165.0" prefWidth="150.0" />
+                    </AnchorPane>
+                </Tab>
+
+                <Tab text="Obsługa Plików">
+                    <AnchorPane>
+                        <children>
+                            <Button layoutX="147.0" layoutY="35.0" mnemonicParsing="false" onAction="#onActionLoadChart" prefHeight="50.0" prefWidth="200.0" text="Wczytaj Wykres" />
+                            <Button layoutX="147.0" layoutY="111.0" mnemonicParsing="false" onAction="#onActionSaveChart" prefHeight="50.0" prefWidth="200.0" text="Zapisz Wykres" />
+                            <AnchorPane layoutX="15.0" layoutY="321.0" prefHeight="200.0" prefWidth="465.0">
+                                <children>
+                                    <Label layoutX="136.0" layoutY="14.0" text="Wybierz Raporty Do Generowania" />
+                                    <CheckBox fx:id="checkBoxDataChart" layoutX="55.0" layoutY="50.0" mnemonicParsing="false" selected="true" text="Wykres Liniowy / Punktowy" />
+                                    <CheckBox fx:id="checkBoxHistogram" layoutX="55.0" layoutY="85.0" mnemonicParsing="false" selected="true" text="Histogram" />
+                                    <CheckBox fx:id="checkBoxSignalParams" layoutX="55.0" layoutY="120.0" mnemonicParsing="false" selected="true" text="Parametry Sygnału" />
+                                    <CheckBox fx:id="checkBoxComparison" layoutX="55.0" layoutY="155.0" mnemonicParsing="false" selected="true" text="Porównanie" />
+                                </children>
+                            </AnchorPane>
+                        </children>
+                    </AnchorPane>
+                </Tab>
+            </tabs>
+        </TabPane>
+
+                          <TabPane fx:id="tabPaneResults" layoutX="586.0" layoutY="14.0" minHeight="552.0" minWidth="666.0" prefHeight="568.0" prefWidth="687.0" tabClosingPolicy="UNAVAILABLE">
+        </TabPane>
+          <Button layoutX="33.0" layoutY="605.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onAction="#onActionButtonGenerateData" prefHeight="35.0" prefWidth="112.0" text="Generuj Sygnał" />
+          <Button layoutX="1173.0" layoutY="605.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onAction="#onActionButtonAddNewTab" text="Dodaj Kartę" />
+          <Button layoutX="600.0" layoutY="605.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" onAction="#onActionButtonOpenAnimationWindow" text="Symulator" />
+    </children>
+
+</AnchorPane>

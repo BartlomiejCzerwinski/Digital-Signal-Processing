@@ -1,0 +1,22 @@
+.chart-symbol {
+    -fx-padding: 2px;
+}
+/* Stylizacja dla serii danych 1 */
+.default-color0.chart-bar {
+    -fx-bar-fill: #1f77b4; /* Niebieski */
+}
+
+/* Stylizacja dla serii danych 2 */
+.default-color1.chart-bar {
+    -fx-bar-fill: #ff7f0e; /* Pomarańczowy */
+}
+
+/* Stylizacja dla serii danych 3 */
+.default-color2.chart-bar {
+    -fx-bar-fill: #2ca02c; /* Zielony */
+}
+
+/* Stylizacja dla serii danych 4 */
+.default-color3.chart-bar {
+    -fx-bar-fill: #d62728; /* Czerwony */
+}
