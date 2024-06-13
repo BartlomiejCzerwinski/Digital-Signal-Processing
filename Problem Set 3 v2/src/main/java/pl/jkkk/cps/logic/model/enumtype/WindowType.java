@@ -1,8 +1,6 @@
 package pl.jkkk.cps.logic.model.enumtype;
 
-import pl.jkkk.cps.logic.model.window.BlackmanWindow;
 import pl.jkkk.cps.logic.model.window.HammingWindow;
-import pl.jkkk.cps.logic.model.window.HanningWindow;
 import pl.jkkk.cps.logic.model.window.RectangularWindow;
 import pl.jkkk.cps.logic.model.window.Window;
 

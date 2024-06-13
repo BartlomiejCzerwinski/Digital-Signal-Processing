@@ -33,8 +33,6 @@ import pl.jkkk.cps.logic.model.signal.SinusoidalRectifiedOneHalfSignal;
 import pl.jkkk.cps.logic.model.signal.SinusoidalRectifiedTwoHalfSignal;
 import pl.jkkk.cps.logic.model.signal.SinusoidalSignal;
 import pl.jkkk.cps.logic.model.signal.TriangularSignal;
-import pl.jkkk.cps.logic.report.LatexGenerator;
-import pl.jkkk.cps.logic.report.ReportType;
 import pl.jkkk.cps.view.fxml.DouglasPeuckerAlg;
 import pl.jkkk.cps.view.fxml.PopOutWindow;
 import pl.jkkk.cps.view.fxml.StageController;
@@ -96,7 +94,6 @@ public class Loader {
     private TextField textFieldFilterRow;
 
     private Map<Integer, Signal> signals = new HashMap<>();
-    private LatexGenerator latexGenerator;
     private double overallTime = 0;
 
     private final ADC adc = new ADC();
