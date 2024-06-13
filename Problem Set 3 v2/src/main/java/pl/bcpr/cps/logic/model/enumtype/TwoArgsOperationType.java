@@ -6,13 +6,11 @@ import java.util.stream.Collectors;
 
 public enum TwoArgsOperationType {
 
-    /*------------------------ FIELDS REGION ------------------------*/
     CONVOLUTION("Splot"),
     CORRELATION("Korelacja");
 
     private final String name;
 
-    /*------------------------ METHODS REGION ------------------------*/
     TwoArgsOperationType(String name) {
         this.name = name;
     }

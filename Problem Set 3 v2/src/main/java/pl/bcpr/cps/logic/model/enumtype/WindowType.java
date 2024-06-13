@@ -10,13 +10,10 @@ import java.util.stream.Collectors;
 
 public enum WindowType {
 
-    /*------------------------ FIELDS REGION ------------------------*/
     RECTANGULAR_WINDOW("Okno Prostokątne"),
     HAMMING_WINDOW("Okno Hamminga");
-
     private final String name;
 
-    /*------------------------ METHODS REGION ------------------------*/
     WindowType(String name) {
         this.name = name;
     }

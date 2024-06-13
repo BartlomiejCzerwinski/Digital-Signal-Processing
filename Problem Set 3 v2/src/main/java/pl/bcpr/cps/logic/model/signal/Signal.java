@@ -31,14 +31,6 @@ public abstract class Signal implements Serializable {
         return rangeLength;
     }
 
-    /**
-     * This method returns discrete representation of
-     * signal (every kind of signal, also continuous one),
-     * this representation can be used to render chart,
-     * compute some signal params and compare signals.
-     *
-     * @return list of data (2D-point) objects representing this signal in discrete way
-     */
     public abstract List<Data> generateDiscreteRepresentation();
 
     /* compute histogram */

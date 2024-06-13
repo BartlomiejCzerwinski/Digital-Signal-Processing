@@ -8,11 +8,9 @@ import java.io.Serializable;
 
 public class Data implements Serializable {
 
-    /*------------------------ FIELDS REGION ------------------------*/
     private double x;
     private double y;
 
-    /*------------------------ METHODS REGION ------------------------*/
     public Data(double x, double y) {
         this.x = x;
         this.y = y;
