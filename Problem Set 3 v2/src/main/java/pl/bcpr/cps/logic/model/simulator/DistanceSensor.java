@@ -1,12 +1,6 @@
 package pl.bcpr.cps.logic.model.simulator;
 
-import pl.bcpr.cps.logic.model.signal.ContinuousBasedDiscreteSignal;
-import pl.bcpr.cps.logic.model.signal.ContinuousSignal;
-import pl.bcpr.cps.logic.model.signal.CorrelationSignal;
-import pl.bcpr.cps.logic.model.signal.DiscreteSignal;
-import pl.bcpr.cps.logic.model.signal.OperationResultContinuousSignal;
-import pl.bcpr.cps.logic.model.signal.RectangularSignal;
-import pl.bcpr.cps.logic.model.signal.SinusoidalSignal;
+import pl.bcpr.cps.logic.model.signal.*;
 
 public class DistanceSensor {
 
@@ -32,10 +26,9 @@ public class DistanceSensor {
     }
 
     public final ContinuousSignal generateProbeSignal() {
-        /* always return new independent copy of probe signal */
         return new OperationResultContinuousSignal(
                 new SinusoidalSignal(0.0, 0.0, 1.0, probeSignalTerm),
-                new SinusoidalSignal(0.0, 0.0, 2.0, probeSignalTerm),
+                new SinusoidalRectifiedOneHalfSignal(0.0, 0.0, 2.0, probeSignalTerm),
                 (a, b) -> a + b);
     }
 
@@ -56,14 +49,12 @@ public class DistanceSensor {
     }
 
     public void update(ContinuousSignal feedbackSignal, double timestamp) {
-        /* fill buffers */
         double rangeStart = timestamp - bufferLength / sampleRate;
         this.discreteProbeSignal = new ContinuousBasedDiscreteSignal(rangeStart, bufferLength,
                 sampleRate, generateProbeSignal());
         this.discreteFeedbackSignal = new ContinuousBasedDiscreteSignal(rangeStart, bufferLength,
                 sampleRate, feedbackSignal);
 
-        /* check if it's time for distance calculation */
         if (timestamp - lastCalculationTimestamp >= reportTerm) {
             lastCalculationTimestamp = timestamp;
             calculateDistance();
@@ -71,10 +62,8 @@ public class DistanceSensor {
     }
 
     private void calculateDistance() {
-        /* correlation */
         this.correlationSignal = new CorrelationSignal(discreteFeedbackSignal, discreteProbeSignal);
 
-        /* find max */
         int indexOfFirstMax = correlationSignal.getNumberOfSamples() / 2;
         for (int i = indexOfFirstMax + 1; i < correlationSignal.getNumberOfSamples(); i++) {
             if (correlationSignal.value(i) > correlationSignal.value(indexOfFirstMax)) {
@@ -82,7 +71,6 @@ public class DistanceSensor {
             }
         }
 
-        /* calculate distance */
         double delay = (indexOfFirstMax - correlationSignal.getNumberOfSamples() / 2)
                 / sampleRate;
         this.distance = delay * signalVelocity / 2.0;

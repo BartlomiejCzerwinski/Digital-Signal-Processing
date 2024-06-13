@@ -33,33 +33,6 @@ public abstract class Signal implements Serializable {
 
     public abstract List<Data> generateDiscreteRepresentation();
 
-    /* compute histogram */
-
-    public static List<Range> generateHistogram(int numberOfRanges,
-                                                List<Data> discreteRepresentation) {
-        final double min = discreteRepresentation.stream()
-                .mapToDouble(data -> data.getY())
-                .min()
-                .getAsDouble();
-        final double max = discreteRepresentation.stream()
-                .mapToDouble(data -> data.getY())
-                .max()
-                .getAsDouble();
-        final List<Range> ranges = new ArrayList<>();
-        IntStream.range(0, numberOfRanges).forEach(i -> {
-            double begin = min + (max - min) / numberOfRanges * i;
-            double end = min + (max - min) / numberOfRanges * (i + 1);
-            int quantity = (int) discreteRepresentation
-                    .stream()
-                    .filter(data -> data.getY() >= begin && data.getY() <= end)
-                    .count();
-            ranges.add(new Range(begin, end, quantity));
-        });
-        return ranges;
-    }
-
-    /* compute params */
-
     public static double meanValue(List<Data> discreteRepresentation) {
         double sum = 0;
         for (int i = 0; i < discreteRepresentation.size(); i++) {
