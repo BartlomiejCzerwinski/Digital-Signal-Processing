@@ -35,7 +35,7 @@ public class DistanceSensor {
         /* always return new independent copy of probe signal */
         return new OperationResultContinuousSignal(
                 new SinusoidalSignal(0.0, 0.0, 1.0, probeSignalTerm),
-                new RectangularSignal(0.0, 0.0, 0.6, probeSignalTerm / 6 * 2, 0.3),
+                new SinusoidalSignal(0.0, 0.0, 2.0, probeSignalTerm),
                 (a, b) -> a + b);
     }
 
