@@ -2,9 +2,6 @@ package pl.bcpr.cps.logic.exception;
 
 public class NotSameLengthException extends RuntimeException {
 
-    /*------------------------ FIELDS REGION ------------------------*/
-
-    /*------------------------ METHODS REGION ------------------------*/
     public NotSameLengthException() {
     }
 

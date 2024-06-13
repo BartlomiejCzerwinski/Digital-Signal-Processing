@@ -13,9 +13,6 @@ import static pl.bcpr.cps.view.constant.Constants.TITLE_MAIN_PANEL;
 
 public class GraphicalMode extends Application {
 
-    /*------------------------ FIELDS REGION ------------------------*/
-
-    /*------------------------ METHODS REGION ------------------------*/
     @Override
     public void start(final Stage stage) throws Exception {
         StageController.buildStage(stage, PATH_MAIN_PANEL, TITLE_MAIN_PANEL,

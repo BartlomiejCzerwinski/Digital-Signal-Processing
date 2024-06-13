@@ -6,12 +6,10 @@ import java.util.stream.Collectors;
 
 public enum OneArgsOperationType {
 
-    /*------------------------ FIELDS REGION ------------------------*/
     SAMPLING("Próbkowanie");
 
     private final String name;
 
-    /*------------------------ METHODS REGION ------------------------*/
     OneArgsOperationType(String name) {
         this.name = name;
     }

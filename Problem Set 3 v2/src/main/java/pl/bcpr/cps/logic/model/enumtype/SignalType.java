@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 public enum SignalType {
 
-    /*------------------------ FIELDS REGION ------------------------*/
     SINUSOIDAL_SIGNAL("Sygnał sinusoidalny"),
     SINUSOIDAL_RECTIFIED_ONE_HALF_SIGNAL("Sygnał sinusoidalny wyprostowany jednopołówkowo"),
     SINUSOIDAL_RECTIFIED_IN_TWO_HALVES("Sygnał sinusoidalny wyprostowany dwupołówkowo"),
@@ -19,7 +18,6 @@ public enum SignalType {
 
     private final String name;
 
-    /*------------------------ METHODS REGION ------------------------*/
     SignalType(String name) {
         this.name = name;
     }
