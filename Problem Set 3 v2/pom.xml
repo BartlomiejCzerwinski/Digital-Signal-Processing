@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.jkkk</groupId>
+    <groupId>pl.bcpr</groupId>
     <artifactId>cps</artifactId>
     <version>0.0.1</version>
     <name>cps</name>
@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
-        <exec-maven-plugin.mainClass>pl.jkkk.cps.Main</exec-maven-plugin.mainClass>
+        <exec-maven-plugin.mainClass>pl.bcpr.cps.Main</exec-maven-plugin.mainClass>
     </properties>
 
     <dependencies>
