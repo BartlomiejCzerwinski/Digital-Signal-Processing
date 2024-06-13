@@ -45,7 +45,7 @@
                                 </AnchorPane>
                                 <AnchorPane layoutX="0.0" layoutY="80.0" prefHeight="40.0" prefWidth="585.0">
                                     <children>
-                                        <Label layoutX="14.0" layoutY="11.0" text="Prędkość przedmiotu" />
+                                        <Label layoutX="14.0" layoutY="11.0" text="Prędkość śledzonego obiektu" />
                                         <TextField fx:id="textFieldItemVelocity" layoutX="409.0" layoutY="6.0" />
                                     </children>
                                 </AnchorPane>
@@ -57,7 +57,7 @@
                                 </AnchorPane>
                                 <AnchorPane layoutX="0.0" layoutY="160.0" prefHeight="40.0" prefWidth="585.0">
                                     <children>
-                                        <Label layoutX="14.0" layoutY="11.0" text="Okres sygnału sondującego" />
+                                        <Label layoutX="14.0" layoutY="11.0" text="Okres" />
                                         <TextField fx:id="textFieldProbeSignalTerm" layoutX="409.0" layoutY="6.0" />
                                     </children>
                                 </AnchorPane>

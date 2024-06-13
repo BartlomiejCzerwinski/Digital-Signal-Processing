@@ -113,15 +113,6 @@ public class MainPanel implements Initializable {
     }
 
     /*--------------------------------------------------------------------------------------------*/
-    @FXML
-    private void onActionLoadChart(ActionEvent actionEvent) {
-        loader.loadChart();
-    }
-
-    @FXML
-    private void onActionSaveChart(ActionEvent actionEvent) {
-        loader.saveChart();
-    }
 
     /*--------------------------------------------------------------------------------------------*/
     @FXML

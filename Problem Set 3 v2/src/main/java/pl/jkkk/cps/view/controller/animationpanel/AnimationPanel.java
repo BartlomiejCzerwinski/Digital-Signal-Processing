@@ -9,10 +9,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import pl.jkkk.cps.Main;
-import pl.jkkk.cps.logic.exception.FileOperationException;
 import pl.jkkk.cps.logic.model.simulator.DistanceSensor;
 import pl.jkkk.cps.logic.model.simulator.Environment;
-import pl.jkkk.cps.logic.readerwriter.ReportWriter;
 import pl.jkkk.cps.view.exception.AnimationNotStartedException;
 import pl.jkkk.cps.view.fxml.PopOutWindow;
 import pl.jkkk.cps.view.fxml.StageController;
@@ -78,7 +76,6 @@ public class AnimationPanel implements Initializable {
     private NumberAxis axisXSignalCorrelation;
 
     private AnimationThread animationThread = new AnimationThread();
-    private ReportWriter reportWriter = new ReportWriter();
 
     /*------------------------ METHODS REGION ------------------------*/
     @Override
@@ -162,39 +159,7 @@ public class AnimationPanel implements Initializable {
         }
     }
 
-    @FXML
-    private void onActionButtonStopAnimation(ActionEvent actionEvent) {
-        try {
-            animationThread.stopAnimation();
-            changeParamsTextFieldsEditable(true);
-        } catch (AnimationNotStartedException e) {
-            PopOutWindow.messageBox("Błąd Zatrzymania",
-                    "Animacja nie została rozpoczęta",
-                    Alert.AlertType.WARNING);
-        }
-    }
 
-    @FXML
-    private void onActionButtonChangeTheme(ActionEvent actionEvent) {
-        changeTheme(PATH_ANIMATION_PANEL, TITLE_ANIMATION_PANEL,
-                PATH_CSS_DARK_STYLING, PATH_CSS_LIGHT_STYLING);
-        StageController.getApplicationStage().setResizable(false);
-    }
-
-    @FXML
-    private void onActionButtonReloadStage(ActionEvent actionEvent) {
-        StageController.reloadStage(PATH_ANIMATION_PANEL, TITLE_ANIMATION_PANEL);
-        StageController.getApplicationStage().setResizable(false);
-    }
-
-    @FXML
-    private void onActionButtonGenerateReport(ActionEvent actionEvent) {
-        try {
-            reportWriter.writeFxChart("Animation", Main.getMainArgs(), paneAnimationPanel);
-        } catch (FileOperationException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void changeParamsTextFieldsEditable(boolean value) {
         textFieldSetEditable(value,

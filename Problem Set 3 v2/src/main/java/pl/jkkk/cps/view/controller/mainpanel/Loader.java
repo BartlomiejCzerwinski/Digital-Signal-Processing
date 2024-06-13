@@ -12,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import pl.jkkk.cps.Main;
-import pl.jkkk.cps.logic.exception.FileOperationException;
 import pl.jkkk.cps.logic.exception.NotSameLengthException;
 import pl.jkkk.cps.logic.model.ADC;
 import pl.jkkk.cps.logic.model.Data;
@@ -34,8 +33,6 @@ import pl.jkkk.cps.logic.model.signal.SinusoidalRectifiedOneHalfSignal;
 import pl.jkkk.cps.logic.model.signal.SinusoidalRectifiedTwoHalfSignal;
 import pl.jkkk.cps.logic.model.signal.SinusoidalSignal;
 import pl.jkkk.cps.logic.model.signal.TriangularSignal;
-import pl.jkkk.cps.logic.readerwriter.FileReaderWriter;
-import pl.jkkk.cps.logic.readerwriter.ReportWriter;
 import pl.jkkk.cps.logic.report.LatexGenerator;
 import pl.jkkk.cps.logic.report.ReportType;
 import pl.jkkk.cps.view.fxml.DouglasPeuckerAlg;
@@ -99,8 +96,6 @@ public class Loader {
     private TextField textFieldFilterRow;
 
     private Map<Integer, Signal> signals = new HashMap<>();
-    private FileReaderWriter<Signal> signalFileReaderWriter;
-    private ReportWriter reportWriter = new ReportWriter();
     private LatexGenerator latexGenerator;
     private double overallTime = 0;
 
@@ -272,44 +267,7 @@ public class Loader {
         }
     }
 
-    /*--------------------------------------------------------------------------------------------*/
-    public void loadChart() {
-        int tabIndex = getSelectedTabIndex(tabPaneResults);
 
-        try {
-            signalFileReaderWriter = new FileReaderWriter<>(
-                    new FileChooser().showOpenDialog(StageController.getApplicationStage())
-                            .getName());
-            representSignal(signalFileReaderWriter.read());
-
-        } catch (NullPointerException | FileOperationException e) {
-            PopOutWindow
-                    .messageBox("Błąd Ładowania Pliku",
-                            "Nie można załadować wybranego pliku",
-                            Alert.AlertType.WARNING);
-        }
-    }
-
-    public void saveChart() {
-        int tabIndex = getSelectedTabIndex(tabPaneResults);
-
-        try {
-            if (signals.get(tabIndex) != null) {
-                signalFileReaderWriter = new FileReaderWriter<>(
-                        new FileChooser().showSaveDialog(StageController.getApplicationStage())
-                                .getName());
-                signalFileReaderWriter.write(signals.get(tabIndex));
-            } else {
-                PopOutWindow.messageBox("Błąd Zapisu Do Pliku",
-                        "Sygnał nie został jeszcze wygenerowany",
-                        Alert.AlertType.WARNING);
-            }
-        } catch (NullPointerException | FileOperationException e) {
-            PopOutWindow.messageBox("Błąd Zapisu Do Pliku",
-                    "Nie można zapisać do wybranego pliku",
-                    Alert.AlertType.WARNING);
-        }
-    }
 
     /*--------------------------------------------------------------------------------------------*/
     private void representSignal(Signal signal) {
@@ -357,9 +315,6 @@ public class Loader {
         CustomTabPane customTabPane = getCurrentCustomTabPaneFromTabPane(tabPane);
 
         try {
-            if (isCheckBoxSelected(checkBoxHistogram)) {
-                reportWriter.writeFxChart("history", Main.getMainArgs(), tabPane);
-            }
 
             if (isScatterChart) {
                 changeLineChartToScatterChart(tabPane);
@@ -367,9 +322,6 @@ public class Loader {
                         .getContent(), mainChartData);
                 switchTabToAnother(customTabPane, 0);
 
-                if (isCheckBoxSelected(checkBoxDataChart)) {
-                    reportWriter.writeFxChart("data", Main.getMainArgs(), tabPane);
-                }
 
             } else {
                 changeScatterChartToLineChart(tabPane);
@@ -377,21 +329,12 @@ public class Loader {
                         .getContent(), mainChartData);
                 switchTabToAnother(customTabPane, 0);
 
-                if (isCheckBoxSelected(checkBoxDataChart)) {
-                    reportWriter.writeFxChart("data", Main.getMainArgs(), tabPane);
-                }
             }
 
             fillParamsTab(customTabPane, signalParams);
 
-            if (isCheckBoxSelected(checkBoxSignalParams)) {
-                latexGenerator = new LatexGenerator("Signal_Params");
-                latexGenerator.createSummaryForSignal(signalParams[0], signalParams[1],
-                        signalParams[2], signalParams[3], signalParams[4]);
-                latexGenerator.generate(ReportType.SIGNAL);
-            }
 
-        } catch (FileOperationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

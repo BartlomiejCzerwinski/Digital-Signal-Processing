@@ -1,7 +1,6 @@
 package pl.jkkk.cps.logic.report;
 
 import pl.jkkk.cps.Main;
-import pl.jkkk.cps.logic.readerwriter.ReportWriter;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.List;
 public class LatexGenerator {
 
     /*------------------------ FIELDS REGION ------------------------*/
-    private ReportWriter reportWriter = new ReportWriter();
     private final String filename;
     private StringBuilder inputParameters = new StringBuilder();
     private StringBuilder summaryForSignal = new StringBuilder();
@@ -78,25 +76,6 @@ public class LatexGenerator {
                 .append(" & ")
                 .append(df.format(effectiveNumberOfBits))
                 .toString();
-    }
-
-    public void generate(ReportType reportType) {
-        if (ReportType.INPUT_PARAMETERS == reportType) {
-            reportWriter.writePlainText(filename, Main.getMainArgs(),
-                    new StringBuilder()
-                            .append(inputParameters)
-                            .toString());
-        } else if (ReportType.SIGNAL == reportType) {
-            reportWriter.writePlainText(filename, Main.getMainArgs(),
-                    new StringBuilder()
-                            .append(summaryForSignal)
-                            .toString());
-        } else if (ReportType.COMPARISON == reportType) {
-            reportWriter.writePlainText(filename, Main.getMainArgs(),
-                    new StringBuilder()
-                            .append(summaryForComparison)
-                            .toString());
-        }
     }
 }
     
