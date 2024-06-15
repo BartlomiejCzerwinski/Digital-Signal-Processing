@@ -7,7 +7,11 @@ import java.util.stream.Collectors;
 public enum TwoArgsOperationType {
 
     CONVOLUTION("Splot"),
-    CORRELATION("Korelacja");
+    CORRELATION("Korelacja"),
+    ADD("Dodawanie"),
+    SUB("Odejmowanie"),
+    MUL("Mnożenie"),
+    DIV("Dzielenie");
 
     private final String name;
 

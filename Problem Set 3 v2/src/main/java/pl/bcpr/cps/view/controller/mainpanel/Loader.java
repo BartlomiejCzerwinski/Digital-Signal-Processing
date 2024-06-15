@@ -17,20 +17,7 @@ import pl.bcpr.cps.logic.model.ADC;
 import pl.bcpr.cps.logic.model.enumtype.SignalType;
 import pl.bcpr.cps.logic.model.enumtype.TwoArgsOperationType;
 import pl.bcpr.cps.logic.model.enumtype.WindowType;
-import pl.bcpr.cps.logic.model.signal.BandPassFilter;
-import pl.bcpr.cps.logic.model.signal.ContinuousSignal;
-import pl.bcpr.cps.logic.model.signal.ConvolutionSignal;
-import pl.bcpr.cps.logic.model.signal.CorrelationSignal;
-import pl.bcpr.cps.logic.model.signal.DiscreteSignal;
-import pl.bcpr.cps.logic.model.signal.HighPassFilter;
-import pl.bcpr.cps.logic.model.signal.LowPassFilter;
-import pl.bcpr.cps.logic.model.signal.RectangularSignal;
-import pl.bcpr.cps.logic.model.signal.RectangularSymmetricSignal;
-import pl.bcpr.cps.logic.model.signal.Signal;
-import pl.bcpr.cps.logic.model.signal.SinusoidalRectifiedOneHalfSignal;
-import pl.bcpr.cps.logic.model.signal.SinusoidalRectifiedTwoHalfSignal;
-import pl.bcpr.cps.logic.model.signal.SinusoidalSignal;
-import pl.bcpr.cps.logic.model.signal.TriangularSignal;
+import pl.bcpr.cps.logic.model.signal.*;
 import pl.bcpr.cps.view.fxml.DouglasPeuckerAlg;
 import pl.bcpr.cps.view.fxml.PopOutWindow;
 import pl.bcpr.cps.view.model.ChartRecord;
@@ -243,7 +230,21 @@ public class Loader {
                 resultSignal = new ConvolutionSignal((DiscreteSignal) s1, (DiscreteSignal) s2);
             } else if (selectedOperation.equals(TwoArgsOperationType.CORRELATION.getName())) {
                 resultSignal = new CorrelationSignal((DiscreteSignal) s1, (DiscreteSignal) s2);
+            } else if (selectedOperation.equals(TwoArgsOperationType.ADD.getName())) {
+                resultSignal = new OperationResultDiscreteSignal((DiscreteSignal) s1, (DiscreteSignal) s2,
+                        (a, b) -> a + b);
+            } else if (selectedOperation.equals(TwoArgsOperationType.SUB.getName())) {
+                resultSignal = new OperationResultDiscreteSignal((DiscreteSignal) s1, (DiscreteSignal) s2,
+                        (a, b) -> a - b);
+            } else if (selectedOperation.equals(TwoArgsOperationType.MUL.getName())) {
+                resultSignal = new OperationResultDiscreteSignal((DiscreteSignal) s1, (DiscreteSignal) s2,
+                        (a, b) -> a * b);
             }
+            else if (selectedOperation.equals(TwoArgsOperationType.DIV.getName())) {
+                resultSignal = new OperationResultDiscreteSignal((DiscreteSignal) s1, (DiscreteSignal) s2,
+                        (a, b) -> a / b);
+            }
+
             representSignal(resultSignal);
         } catch (NotSameLengthException e) {
             PopOutWindow.messageBox("Błednie wybrane wykresy",
