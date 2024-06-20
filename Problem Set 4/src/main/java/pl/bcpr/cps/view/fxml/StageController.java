@@ -2,16 +2,16 @@ package pl.bcpr.cps.view.fxml;
 
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import pl.bcpr.cps.view.fxml.core.WindowDimensions;
 import pl.bcpr.cps.view.fxml.core.FxmlStageSetup;
+import pl.bcpr.cps.view.fxml.core.WindowDimensions;
 
 import java.io.IOException;
 
-public class StageController {
+public class StageController extends FxmlStageSetup {
 
-    /*------------------------ FIELDS REGION ------------------------*/
+    private StageController() {
+    }
 
-    /*------------------------ METHODS REGION ------------------------*/
     public static Stage getApplicationStage() {
         return FxmlStageSetup.getApplicationStage();
     }
@@ -29,10 +29,13 @@ public class StageController {
     }
 
     public static void buildStage(Stage stage, String filePath, String title,
-                                  WindowDimensions dimensions, String cssFilePath) throws IOException {
-
+                                  WindowDimensions dimensions, String cssFilePath) {
+        try {
             FxmlStageSetup.buildStage(stage, filePath, title, dimensions, cssFilePath);
-
+        } catch (IOException | IllegalStateException e) {
+            PopOutWindow.messageBox("Stage Building Error",
+                    "Stage cannot be properly built", Alert.AlertType.ERROR);
+        }
     }
 
     public static void loadStage(String filePath, String title) {

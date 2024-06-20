@@ -15,10 +15,8 @@ public class CorrelationSignal extends DiscreteSignal {
 
     @Override
     public double value(int i) {
-        /* translate to real indexes */
         i = i - (x.getNumberOfSamples() - 1);
 
-        /* compute */
         double sum = 0.0;
         int startK = Math.max(0, i);
         int endK = Math.min(h.getNumberOfSamples(), x.getNumberOfSamples() + i);

@@ -1,7 +1,6 @@
 package pl.bcpr.cps.logic.exception;
 
 public class NotSameLengthException extends RuntimeException {
-
     public NotSameLengthException() {
     }
 

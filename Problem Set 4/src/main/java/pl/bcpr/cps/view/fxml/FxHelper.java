@@ -23,14 +23,9 @@ import java.util.Collection;
 import java.util.List;
 
 public class FxHelper {
-
-    /*------------------------ FIELDS REGION ------------------------*/
-
-    /*------------------------ METHODS REGION ------------------------*/
     private FxHelper() {
     }
 
-    /*--------------------------------------------------------------------------------------------*/
     public static void changeTheme(String pathPanel, String title,
                                    String pathCssDarkTheme, String pathCssLightTheme) {
         if (StageController.getGlobalCssStyling().equals(pathCssDarkTheme)) {
@@ -42,7 +37,6 @@ public class FxHelper {
         }
     }
 
-    /*--------------------------------------------------------------------------------------------*/
     public static XYChart.Data<Number, Number> prepareDataRecord(Number numberOne,
                                                                  Number numberTwo) {
         return new XYChart.Data(numberOne, numberTwo);
@@ -63,7 +57,6 @@ public class FxHelper {
         return new XYChart.Data(stringOne, stringTwo);
     }
 
-    /*--------------------------------------------------------------------------------------------*/
     public static CustomTabPane getCurrentCustomTabPaneFromTabPane(TabPane tabPane) {
         return (CustomTabPane) tabPane.getSelectionModel().getSelectedItem().getContent();
     }
@@ -71,6 +64,29 @@ public class FxHelper {
     public static void removeAndAddNewPaneChildren(Pane pane, Node... nodes) {
         pane.getChildren().clear();
         pane.getChildren().addAll(nodes);
+    }
+
+    public static void switchTabToAnother(TabPane tabPane, int index) {
+        tabPane.getSelectionModel().select(index);
+    }
+
+    public static void removeSelectedTabFromTabPane(TabPane tabPane) {
+        tabPane.getTabs().remove(getSelectedTabIndex(tabPane));
+    }
+
+    public static void setPaneVisibility(boolean value, Pane... panes) {
+        Arrays.stream(panes).forEach((it) -> it.setVisible(value));
+    }
+
+    public static int getSelectedTabIndex(TabPane tabPane) {
+        return tabPane.getSelectionModel().getSelectedIndex();
+    }
+
+    public static List<String> getTabNameList(List<Tab> tabList) {
+        List<String> names = new ArrayList<>();
+        tabList.forEach((it) -> names.add(it.getText()));
+
+        return names;
     }
 
     public static void textFieldSetEditable(boolean value, TextField... textFields) {
@@ -129,17 +145,6 @@ public class FxHelper {
         return comboBox.getSelectionModel().getSelectedIndex();
     }
 
-    public static Integer getSelectedTabIndex(TabPane tabPane) {
-        return tabPane.getSelectionModel().getSelectedIndex();
-    }
-
-    public static List<String> getTabNameList(List<Tab> tabList) {
-        List<String> names = new ArrayList<>();
-        tabList.forEach((it) -> names.add(it.getText()));
-
-        return names;
-    }
-
     public static void clearAndAddNewDataToChart(XYChart chart, XYChart.Series series) {
         chart.getData().clear();
         chart.getData().add(series);
@@ -166,7 +171,6 @@ public class FxHelper {
         if (title.length == 1) {
             lineChart.setTitle(title[0]);
         }
-
 
         return lineChart;
     }
@@ -198,11 +202,6 @@ public class FxHelper {
         return scatterChart;
     }
 
-    /*--------------------------------------------------------------------------------------------*/
-    public static void switchTabToAnother(TabPane tabPane, int index) {
-        tabPane.getSelectionModel().select(index);
-    }
-
     public static void changeLineChartToScatterChart(TabPane tabPane) {
         CustomTabPane customTabPane = getCurrentCustomTabPaneFromTabPane(tabPane);
         customTabPane.getChartTab().setContent(prepareScatterChart());
@@ -223,7 +222,6 @@ public class FxHelper {
         customTabPane.getChartTab().setContent(lineChart);
     }
 
-    /*--------------------------------------------------------------------------------------------*/
     public static void clearAndFillLineChart(LineChart lineChart,
                                              Collection<ChartRecord<Number, Number>> dataCollection) {
         XYChart.Series series = new XYChart.Series<>();

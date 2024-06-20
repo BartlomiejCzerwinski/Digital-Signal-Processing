@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 
 public enum TwoArgsOperationType {
 
+    ADDITION("Dodawanie"),
+    SUBTRACTION("Odejmowanie"),
+    MULTIPLICATION("Mnożenie"),
+    DIVISION("Dzielenie"),
     CONVOLUTION("Splot"),
-    CORRELATION("Korelacja"),
-    ADD("Dodawanie"),
-    SUB("Odejmowanie"),
-    MUL("Mnożenie"),
-    DIV("Dzielenie");
+    CORRELATION("Korelacja");
 
     private final String name;
 

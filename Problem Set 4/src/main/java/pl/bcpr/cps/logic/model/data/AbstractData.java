@@ -1,4 +1,4 @@
-package pl.bcpr.cps.logic.model;
+package pl.bcpr.cps.logic.model.data;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -6,12 +6,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
 
-public class Data implements Serializable {
+public class AbstractData<T> implements Serializable {
 
     private double x;
-    private double y;
+    private T y;
 
-    public Data(double x, double y) {
+    public AbstractData(double x, T y) {
         this.x = x;
         this.y = y;
     }
@@ -20,7 +20,7 @@ public class Data implements Serializable {
         return x;
     }
 
-    public double getY() {
+    public T getY() {
         return y;
     }
 
@@ -34,7 +34,7 @@ public class Data implements Serializable {
             return false;
         }
 
-        Data data = (Data) o;
+        AbstractData data = (AbstractData) o;
 
         return new EqualsBuilder()
                 .append(x, data.x)

@@ -1,8 +1,8 @@
 package pl.bcpr.cps.logic.model.signal;
 
-import java.util.List;
+import pl.bcpr.cps.logic.model.data.Data;
 
-import pl.bcpr.cps.logic.model.Data;
+import java.util.List;
 
 public abstract class ContinuousSignal extends Signal {
 

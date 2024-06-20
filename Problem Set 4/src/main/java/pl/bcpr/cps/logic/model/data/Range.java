@@ -1,4 +1,4 @@
-package pl.bcpr.cps.logic.model;
+package pl.bcpr.cps.logic.model.data;
 
 public class Range {
 

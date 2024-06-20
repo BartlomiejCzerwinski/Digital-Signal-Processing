@@ -6,11 +6,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ChartRecord<T1, T2> {
 
-    /*------------------------ FIELDS REGION ------------------------*/
     private T1 x;
     private T2 y;
 
-    /*------------------------ METHODS REGION ------------------------*/
     public ChartRecord(T1 x, T2 y) {
         this.x = x;
         this.y = y;

@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
 
 public class MainPanel implements Initializable {
 
-    /*------------------------ FIELDS REGION ------------------------*/
     @FXML
     private TabPane tabPaneInputs;
     @FXML
@@ -50,6 +49,8 @@ public class MainPanel implements Initializable {
     private CheckBox checkBoxSignalParams;
     @FXML
     private CheckBox checkBoxComparison;
+    @FXML
+    private CheckBox checkBoxTransformation;
 
     private TextField textFieldAmplitude = new TextField();
     private TextField textFieldStartTime = new TextField();
@@ -68,7 +69,6 @@ public class MainPanel implements Initializable {
     private Initializer initializer;
     private Loader loader;
 
-    /*------------------------ METHODS REGION ------------------------*/
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -94,16 +94,28 @@ public class MainPanel implements Initializable {
                 oneArgsPane, textFieldQuantizationLevels,
                 textFieldSampleRate, textFieldReconstructionSincParam, windowTypePane,
                 textFieldCuttingFrequency, textFieldFilterRow, checkBoxDataChart,
-                checkBoxHistogram, checkBoxSignalParams, checkBoxComparison
+                checkBoxHistogram, checkBoxSignalParams, checkBoxComparison, checkBoxTransformation
         );
 
         initializer.prepareTabPaneResults(0);
         initializer.prepareTabPaneInputs();
     }
 
-    /*--------------------------------------------------------------------------------------------*/
+    @FXML
+    private void onActionLoadChart(ActionEvent actionEvent) {
+        loader.loadChart();
+    }
 
-    /*--------------------------------------------------------------------------------------------*/
+    @FXML
+    private void onActionSaveChart(ActionEvent actionEvent) {
+        loader.saveChart();
+    }
+
+    @FXML
+    private void onActionButtonGenerateComparison(ActionEvent actionEvent) {
+        loader.generateComparison();
+    }
+
     @FXML
     private void onActionButtonGenerateData(ActionEvent actionEvent) {
         Integer selectedTab = FxHelper.getSelectedTabIndex(tabPaneInputs);
@@ -134,7 +146,6 @@ public class MainPanel implements Initializable {
         FxHelper.fillComboBox(comboBoxSignalOneArgs, FxHelper.getTabNameList(tabPaneResults.getTabs()));
     }
 
-    /*--------------------------------------------------------------------------------------------*/
     @FXML
     private void onActionButtonOpenAnimationWindow(ActionEvent actionEvent) {
         StageController.reloadStage(Constants.PATH_ANIMATION_PANEL, Constants.TITLE_ANIMATION_PANEL);

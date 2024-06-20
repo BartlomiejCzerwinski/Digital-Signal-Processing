@@ -5,12 +5,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class WindowDimensions {
-
-    /*------------------------ FIELDS REGION ------------------------*/
     private double width;
     private double height;
 
-    /*------------------------ METHODS REGION ------------------------*/
     public WindowDimensions(double width, double height) {
         this.width = width;
         this.height = height;

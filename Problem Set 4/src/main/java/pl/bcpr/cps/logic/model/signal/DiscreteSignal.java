@@ -1,9 +1,9 @@
 package pl.bcpr.cps.logic.model.signal;
 
+import pl.bcpr.cps.logic.model.data.Data;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import pl.bcpr.cps.logic.model.Data;
 
 public abstract class DiscreteSignal extends Signal {
 
@@ -13,7 +13,6 @@ public abstract class DiscreteSignal extends Signal {
     public DiscreteSignal(double rangeStart, double rangeLength, double sampleRate) {
         super(rangeStart, rangeLength);
         this.sampleRate = sampleRate;
-        /* how many whole samples does this rangeLength contain */
         this.numberOfSamples = (int) (rangeLength * sampleRate);
     }
 

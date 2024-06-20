@@ -2,18 +2,22 @@ package pl.bcpr.cps.view.controller.mainpanel;
 
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import pl.bcpr.cps.logic.model.enumtype.OneArgsOperationType;
-import pl.bcpr.cps.logic.model.enumtype.WindowType;
+import javafx.scene.layout.VBox;
 import pl.bcpr.cps.view.fxml.FxHelper;
 import pl.bcpr.cps.view.model.CustomTab;
 import pl.bcpr.cps.view.model.CustomTabPane;
+import pl.bcpr.cps.logic.model.enumtype.AlgorithmType;
+import pl.bcpr.cps.logic.model.enumtype.OneArgsOperationType;
 import pl.bcpr.cps.logic.model.enumtype.SignalType;
 import pl.bcpr.cps.logic.model.enumtype.TwoArgsOperationType;
+import pl.bcpr.cps.logic.model.enumtype.WaveletType;
+import pl.bcpr.cps.logic.model.enumtype.WindowType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +28,6 @@ import static pl.bcpr.cps.view.fxml.FxHelper.prepareLineChart;
 
 public class Initializer {
 
-    /*------------------------ FIELDS REGION ------------------------*/
     private ComboBox comboBoxSignalTypes;
     private ComboBox comboBoxOperationTypesTwoArgs;
     private ComboBox comboBoxFirstSignalTwoArgs;
@@ -44,9 +47,6 @@ public class Initializer {
 
     private ComboBox comboBoxOperationTypesOneArgs;
     private ComboBox comboBoxSignalOneArgs;
-    private ComboBox comboBoxComparisonFirstSignal;
-    private ComboBox comboBoxComparisonSecondSignal;
-    private AnchorPane comparisonPane;
     private AnchorPane oneArgsPane;
     private TextField textFieldQuantizationLevels;
     private TextField textFieldSampleRate;
@@ -55,7 +55,6 @@ public class Initializer {
     private TextField textFieldCuttingFrequency;
     private TextField textFieldFilterRow;
 
-    /*------------------------ METHODS REGION ------------------------*/
     public Initializer(ComboBox comboBoxSignalTypes, ComboBox comboBoxOperationTypesTwoArgs,
                        ComboBox comboBoxFirstSignalTwoArgs, ComboBox comboBoxSecondSignalTwoArgs,
                        Pane chooseParamsTab, TextField textFieldAmplitude,
@@ -93,7 +92,6 @@ public class Initializer {
         this.textFieldFilterRow = textFieldFilterRow;
     }
 
-    /*--------------------------------------------------------------------------------------------*/
     public void prepareTabPaneInputs() {
         fillGenerationTab();
         fillOneArgsTab();
@@ -112,11 +110,20 @@ public class Initializer {
         tabPaneResults.getTabs().add(new Tab("Karta " + index,
                 new CustomTabPane(
                         new CustomTab("Wykres", FxHelper.prepareLineChart(), false),
-                        new CustomTab("Parametry", pane, false)
+                        new CustomTab("Parametry", pane, false),
+                        new CustomTab("W1", new VBox(
+                                FxHelper.prepareLineChart(
+                                        "Część rzeczywista amplitudy w funkcji częstotliwości"),
+                                FxHelper.prepareLineChart(
+                                        "Część urojona amplitudy w funkcji częstotliwości")),
+                                false),
+                        new CustomTab("W2", new VBox(
+                                FxHelper.prepareLineChart("Moduł liczby zespolonej"),
+                                FxHelper.prepareLineChart("Argument liczby w funkcji częstotliwości")),
+                                false)
                 )));
     }
 
-    /*--------------------------------------------------------------------------------------------*/
     private void fillGenerationTab() {
         FxHelper.textFieldSetValue(textFieldAmplitude, String.valueOf(1));
         FxHelper.textFieldSetValue(textFieldStartTime, String.valueOf(0));
@@ -142,11 +149,11 @@ public class Initializer {
         ).collect(Collectors.toCollection(ArrayList::new));
 
         chooseParamsTab.getChildren().setAll(basicInputs);
-        windowTypePane.setVisible(false);
+        FxHelper.setPaneVisibility(false, windowTypePane);
 
         comboBoxSignalTypes.setOnAction((event -> {
             String selectedSignal = FxHelper.getValueFromComboBox(comboBoxSignalTypes);
-            windowTypePane.setVisible(false);
+            FxHelper.setPaneVisibility(false, windowTypePane);
 
             if (selectedSignal.equals(SignalType.SINUSOIDAL_SIGNAL.getName())
                     || selectedSignal.equals(SignalType.SINUSOIDAL_RECTIFIED_ONE_HALF_SIGNAL.getName())
@@ -184,30 +191,9 @@ public class Initializer {
 
                 ComboBox comboBoxWindowType = (ComboBox) windowTypePane.getChildren().get(1);
                 FxHelper.fillComboBox(comboBoxWindowType, WindowType.getNamesList());
-                windowTypePane.setVisible(true);
+                FxHelper.setPaneVisibility(true, windowTypePane);
             }
         }));
-    }
-
-    /*--------------------------------------------------------------------------------------------*/
-    private void actionComboBoxOperationTypesOneArgs() {
-        Pane topPane = (Pane) oneArgsPane.getChildren().get(0);
-        ComboBox comboBoxMethod = (ComboBox) topPane.getChildren().get(1);
-        Pane bottomPane = (Pane) oneArgsPane.getChildren().get(1);
-
-        String selectedOperation = FxHelper.getValueFromComboBox(comboBoxOperationTypesOneArgs);
-        topPane.setVisible(false);
-
-        if (selectedOperation.equals(OneArgsOperationType.SAMPLING.getName())) {
-            bottomPane.setVisible(true);
-
-            FxHelper.removeAndAddNewPaneChildren(bottomPane,
-                    FxHelper.prepareLabelWithPosition("Częstotliwość próbkowania", 14, 33),
-                    FxHelper.setTextFieldPosition(textFieldSampleRate, 250, 30)
-            );
-
-        }
-
     }
 
     private void fillOneArgsTab() {
@@ -217,25 +203,65 @@ public class Initializer {
         FxHelper.textFieldSetValue(textFieldReconstructionSincParam, String.valueOf(1));
         FxHelper.fillComboBox(comboBoxSignalOneArgs, FxHelper.getTabNameList(tabPaneResults.getTabs()));
 
-        Pane topPane = (Pane) oneArgsPane.getChildren().get(0);
-        Pane bottomPane = (Pane) oneArgsPane.getChildren().get(1);
-        topPane.setVisible(false);
+        final Pane topPane = (Pane) oneArgsPane.getChildren().get(0);
+        final Pane middlePane = (Pane) oneArgsPane.getChildren().get(1);
+        final Pane bottomPane = (Pane) oneArgsPane.getChildren().get(2);
+
+        FxHelper.setPaneVisibility(false, topPane, middlePane);
         FxHelper.removeAndAddNewPaneChildren(bottomPane,
                 FxHelper.prepareLabelWithPosition("Częstotliwość próbkowania", 14, 33),
                 FxHelper.setTextFieldPosition(textFieldSampleRate, 250, 30)
         );
 
-        comboBoxOperationTypesOneArgs.setOnAction((event -> {
-            actionComboBoxOperationTypesOneArgs();
-        }));
+        comboBoxOperationTypesOneArgs.setOnAction((event ->
+                actionComboBoxOperationTypesOneArgs(topPane, middlePane, bottomPane)));
     }
 
-    /*--------------------------------------------------------------------------------------------*/
+    private void actionComboBoxOperationTypesOneArgs(Pane topPane,
+                                                     Pane middlePane, Pane bottomPane) {
+        final String methodLabelValue = "Wybierz Metodę";
+        final String algorithmLabelValue = "Wybierz Typ Algorytmu";
+        final String algorithmLevelLabelValue = "Wybierz Poziom";
+
+        final Label labelMethodOrAlgorithm = (Label) topPane.getChildren().get(0);
+        final ComboBox comboBoxMethodOrAlgorithm = (ComboBox) topPane.getChildren().get(1);
+
+        String selectedOperation = FxHelper.getValueFromComboBox(comboBoxOperationTypesOneArgs);
+        FxHelper.setPaneVisibility(false, topPane, middlePane);
+
+        if (selectedOperation.equals(OneArgsOperationType.SAMPLING.getName())) {
+            FxHelper.setPaneVisibility(true, bottomPane);
+
+            FxHelper.removeAndAddNewPaneChildren(bottomPane,
+                    FxHelper.prepareLabelWithPosition("Częstotliwość próbkowania", 14, 33),
+                    FxHelper.setTextFieldPosition(textFieldSampleRate, 250, 30)
+            );
+
+        } else if (selectedOperation.equals(OneArgsOperationType.DISCRETE_FOURIER_TRANSFORMATION.getName())
+                || selectedOperation.equals(OneArgsOperationType.COSINE_TRANSFORMATION.getName())
+                || selectedOperation.equals(OneArgsOperationType.WALSH_HADAMARD_TRANSFORMATION.getName())
+                || selectedOperation.equals(OneArgsOperationType.WAVELET_TRANSFORMATION.getName())) {
+
+            FxHelper.setPaneVisibility(false, bottomPane);
+            FxHelper.setPaneVisibility(true, topPane, middlePane);
+
+            labelMethodOrAlgorithm.setText(algorithmLabelValue);
+
+            if (!selectedOperation.equals(OneArgsOperationType.WAVELET_TRANSFORMATION.getName())) {
+                FxHelper.fillComboBox(comboBoxMethodOrAlgorithm, AlgorithmType.getNamesList());
+            }
+
+            if (selectedOperation.equals(OneArgsOperationType
+                    .WAVELET_TRANSFORMATION.getName())) {
+                FxHelper.fillComboBox(comboBoxMethodOrAlgorithm, WaveletType.getNamesList());
+                labelMethodOrAlgorithm.setText(algorithmLevelLabelValue);
+            }
+        }
+    }
+
     private void fillTwoArgsTab() {
         FxHelper.fillComboBox(comboBoxOperationTypesTwoArgs, TwoArgsOperationType.getNamesList());
         FxHelper.fillComboBox(comboBoxFirstSignalTwoArgs, FxHelper.getTabNameList(tabPaneResults.getTabs()));
         FxHelper.fillComboBox(comboBoxSecondSignalTwoArgs, FxHelper.getTabNameList(tabPaneResults.getTabs()));
     }
-
-    /*--------------------------------------------------------------------------------------------*/
 }

@@ -22,7 +22,7 @@ public class LowPassFilter extends DiscreteSignal {
 
     @Override
     public double value(int n) {
-        int c = (M - 1) / 2; /* center sample */
+        int c = (M - 1) / 2;
         double result;
         if (n == c) {
             result = 2.0 / K;

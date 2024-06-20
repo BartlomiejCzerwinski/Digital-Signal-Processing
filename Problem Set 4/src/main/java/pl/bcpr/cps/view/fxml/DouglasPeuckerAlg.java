@@ -1,6 +1,6 @@
 package pl.bcpr.cps.view.fxml;
 
-import pl.bcpr.cps.logic.model.Data;
+import pl.bcpr.cps.logic.model.data.Data;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +13,6 @@ public class DouglasPeuckerAlg {
         data.add(inputData.get(first));
         data.add(inputData.get(last));
 
-        /* locate the farthest point */
         int farthestIndex = -1;
         double farthestDistance = 0.0;
         for (int i = first + 1; i < last; i++) {
@@ -32,21 +31,16 @@ public class DouglasPeuckerAlg {
         return data;
     }
 
-    /**
-     * Calculate distance from section |ab| to point c.
-     */
     public double distance(Data a, Data b, Data c) {
-        double x, y; /* x (nearest point from |ab| to c) coordinates */
-        double a1, b1; /* line ab params */
-        double a2, b2; /* line xc params */
+        double x, y;
+        double a1, b1;
+        double a2, b2;
 
-        /* check if vertical line */
         if (a.getX() == b.getX()) {
             return Math.abs(c.getX() - a.getX());
         }
 
-        /* check if horizontal line */
-        if (a.getY() == b.getY()) {
+        if (a.getY().equals(b.getY())) {
             return Math.abs(c.getY() - a.getY());
         }
 

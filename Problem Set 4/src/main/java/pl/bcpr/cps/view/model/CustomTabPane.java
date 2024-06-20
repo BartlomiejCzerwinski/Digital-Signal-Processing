@@ -6,17 +6,19 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class CustomTabPane extends TabPane {
-
-    /*------------------------ FIELDS REGION ------------------------*/
     private CustomTab chartTab;
+    private CustomTab histogramTab;
     private CustomTab paramsTab;
+    private CustomTab tabW1;
+    private CustomTab tabW2;
 
-    /*------------------------ METHODS REGION ------------------------*/
     public CustomTabPane(CustomTab chartTab,
-                         CustomTab paramsTab) {
-        super(chartTab, paramsTab);
+                         CustomTab paramsTab, CustomTab tabW1, CustomTab tabW2) {
+        super(chartTab, paramsTab, tabW1, tabW2);
         this.chartTab = chartTab;
         this.paramsTab = paramsTab;
+        this.tabW1 = tabW1;
+        this.tabW2 = tabW2;
     }
 
     public CustomTab getChartTab() {
@@ -33,6 +35,22 @@ public class CustomTabPane extends TabPane {
 
     public void setParamsTab(CustomTab paramsTab) {
         this.paramsTab = paramsTab;
+    }
+
+    public CustomTab getTabW1() {
+        return tabW1;
+    }
+
+    public void setTabW1(CustomTab tabW1) {
+        this.tabW1 = tabW1;
+    }
+
+    public CustomTab getTabW2() {
+        return tabW2;
+    }
+
+    public void setTabW2(CustomTab tabW2) {
+        this.tabW2 = tabW2;
     }
 
     @Override
