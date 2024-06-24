@@ -9,14 +9,6 @@ public class DiscreteWaveletTransform extends RealTransform {
             (1.0 - Math.sqrt(3.0)) / (4.0 * Math.sqrt(2))
     };
 
-    private static final double[] DB6 = {
-            0.47046721, 1.14111692, 0.650365, -0.19093442, -0.12083221, 0.0498175
-    };
-
-    private static final double[] DB8 = {
-            0.32580343, 1.01094572, 0.8922014, -0.03957503, -0.26450717, 0.0436163, 0.0465036,
-            -0.01498699
-    };
 
     @Override
     public double[] transform(final double[] x) {

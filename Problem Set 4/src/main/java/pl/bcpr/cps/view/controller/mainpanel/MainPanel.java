@@ -117,7 +117,7 @@ public class MainPanel implements Initializable {
     }
 
     @FXML
-    private void onActionButtonGenerateData(ActionEvent actionEvent) {
+    private void onActionButtonGenerateData(ActionEvent actionEvent) throws Exception {
         Integer selectedTab = FxHelper.getSelectedTabIndex(tabPaneInputs);
 
         switch (selectedTab) {

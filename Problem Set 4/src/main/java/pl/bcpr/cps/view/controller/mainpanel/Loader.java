@@ -206,7 +206,7 @@ public class Loader {
         }
     }
 
-    public void performOneArgsOperationOnCharts() {
+    public void performOneArgsOperationOnCharts() throws Exception {
         Signal signal = null;
         final String selectedOperationOneArgs = FxHelper.getValueFromComboBox(comboBoxOperationTypesOneArgs);
         final Integer selectedSignalIndex = FxHelper.getIndexFromComboBox(comboBoxSignalOneArgs);
@@ -219,7 +219,7 @@ public class Loader {
 
         final Transformer transformer = new Transformer();
 
-        try {
+
             long startTime = System.currentTimeMillis();
 
             if (selectedOperationOneArgs.equals(OneArgsOperationType.SAMPLING.getName())) {
@@ -236,7 +236,7 @@ public class Loader {
                             textFieldComputationTime
                     );
 
-                } else if (algorithm.equals(AlgorithmType.FAST_TRANSFORMATION_IN_SITU.getName())) {
+                } else if (algorithm.equals(AlgorithmType.FAST_TRANSFORMATION.getName())) {
                     signal = calculateInvocationTime(() -> transformer
                                     .fastFourierTransformInSitu((DiscreteSignal) selectedSignal),
                             textFieldComputationTime);
@@ -251,7 +251,7 @@ public class Loader {
                                     .discreteCosineTransform((DiscreteSignal) selectedSignal),
                             textFieldComputationTime
                     );
-                } else if (algorithm.equals(AlgorithmType.FAST_TRANSFORMATION_IN_SITU.getName())) {
+                } else if (algorithm.equals(AlgorithmType.FAST_TRANSFORMATION.getName())) {
                     signal = calculateInvocationTime(() -> transformer
                                     .fastCosineTransform((DiscreteSignal) selectedSignal),
                             textFieldComputationTime
@@ -267,7 +267,7 @@ public class Loader {
                                     .walshHadamardTransform((DiscreteSignal) selectedSignal),
                             textFieldComputationTime
                     );
-                } else if (algorithm.equals(AlgorithmType.FAST_TRANSFORMATION_IN_SITU.getName())) {
+                } else if (algorithm.equals(AlgorithmType.FAST_TRANSFORMATION.getName())) {
                     signal = calculateInvocationTime(() -> transformer
                                     .fastWalshHadamardTransform((DiscreteSignal) selectedSignal),
                             textFieldComputationTime
@@ -294,15 +294,7 @@ public class Loader {
                 representSignal(signal);
             }
 
-        } catch (NullPointerException | NumberFormatException e) {
-            PopOutWindow.messageBox("Błędne dane", "Wprowadzono błędne dane",
-                    Alert.AlertType.WARNING);
-        } catch (ClassCastException e) {
-            PopOutWindow.messageBox("Błędne dane", "Wybrano niepoprawny typ sygnału",
-                    Alert.AlertType.WARNING);
-        } catch (Exception e) {
-            PopOutWindow.messageBox("Błąd Obliczania Czasu", "", Alert.AlertType.WARNING);
-        }
+
     }
 
     public void performTwoArgsOperationOnCharts() {
@@ -434,7 +426,7 @@ public class Loader {
                 convertDiscreteRepresentationToChartRecord(complexSignal,
                         ComplexSignal.DiscreteRepresentationType.ARG);
 
-        try {
+
             VBox vBoxW1 = (VBox) customTabPane.getTabW1().getContent();
             FxHelper.clearAndFillLineChart((LineChart) vBoxW1.getChildren().get(0), chartDataReal);
             FxHelper.clearAndFillLineChart((LineChart) vBoxW1.getChildren().get(1), chartDataImaginary);
@@ -450,11 +442,7 @@ public class Loader {
             }
 
             FxHelper.switchTabToAnother(customTabPane, 3);
-        } catch (Exception e) {
-            PopOutWindow.messageBox("Błąd Zapisu Do Pliku",
-                    "Nie można zapisać raportu do pliku",
-                    Alert.AlertType.WARNING);
-        }
+
     }
 
     private List<ChartRecord<Number, Number>> convertDiscreteRepresentationToChartRecord(
@@ -507,7 +495,7 @@ public class Loader {
                                            double[] signalParams, boolean isScatterChart) {
         CustomTabPane customTabPane = FxHelper.getCurrentCustomTabPaneFromTabPane(tabPane);
 
-        try {
+
             FxHelper.switchTabToAnother(customTabPane, 1);
 
 
@@ -527,11 +515,7 @@ public class Loader {
 
             fillParamsTab(customTabPane, signalParams);
 
-        } catch (Exception e) {
-            PopOutWindow.messageBox("Błąd Zapisu Do Pliku",
-                    "Nie można zapisać raportu do pliku",
-                    Alert.AlertType.WARNING);
-        }
+
     }
 
     private void fillParamsTab(CustomTabPane customTabPane, double[] signalParams) {

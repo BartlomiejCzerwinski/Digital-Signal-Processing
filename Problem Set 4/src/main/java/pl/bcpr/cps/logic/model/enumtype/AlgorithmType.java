@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 public enum AlgorithmType {
     BY_DEFINITION("Z definicji"),
-    FAST_TRANSFORMATION_IN_SITU("Szybka transformacja");
+    FAST_TRANSFORMATION("Szybka transformacja");
 
     private final String name;
 

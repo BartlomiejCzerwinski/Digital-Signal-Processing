@@ -22,6 +22,10 @@ public abstract class DiscreteSignal extends Signal {
         this.numberOfSamples = numberOfSamples;
     }
 
+    public double argument(int i) {
+        return i * (1.0 / sampleRate) + getRangeStart();
+    }
+
     public double getSampleRate() {
         return sampleRate;
     }
@@ -31,10 +35,6 @@ public abstract class DiscreteSignal extends Signal {
     }
 
     public abstract double value(int i);
-
-    public double argument(int i) {
-        return i * (1.0 / sampleRate) + getRangeStart();
-    }
 
     @Override
     public List<Data> generateDiscreteRepresentation() {
