@@ -6,6 +6,7 @@ public class FastFourierTransform extends ComplexTransform {
 
     @Override
     public Complex[] transform(Complex[] x) {
+        x = padToPowerOfTwo(x);
         Complex[] W = calculateVectorOfWParams(x.length);
 
         for (int N = x.length; N >= 2; N /= 2) {
@@ -76,5 +77,22 @@ public class FastFourierTransform extends ComplexTransform {
             }
         }
         return value;
+    }
+
+    private Complex[] padToPowerOfTwo(Complex[] x) {
+        int N = x.length;
+        int newLength = 1;
+        while (newLength < N) {
+            newLength *= 2;
+        }
+        if (newLength == N) {
+            return x;
+        }
+        Complex[] padded = new Complex[newLength];
+        System.arraycopy(x, 0, padded, 0, N);
+        for (int i = N; i < newLength; i++) {
+            padded[i] = new Complex(0, 0);
+        }
+        return padded;
     }
 }
